@@ -14,7 +14,7 @@ class Config:
         self.sound_dir: str = 'assets/sounds/'
 
         self.__db_name: str = 'game_database.sqlite3'
-        self.__app_name: str = 'My Game'
+        self.__app_name: str = 'Project Pygame'
         self.__sound_volume: float = 1.0  # 0.0 to 1.0
         self.__game_difficulty_level: int = 3
         self.__screen_width: int = 800
