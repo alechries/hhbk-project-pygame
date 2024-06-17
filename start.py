@@ -1,10 +1,10 @@
 import pygame
 from modules.auth import AuthPage
 from utils.start_app import start_app
-from models.user import UserModel
+from utils.model import BaseModel
 
 pygame.init()
 
 if __name__ == "__main__":
-    user = UserModel()
+    BaseModel.initialize_tables()
     start_app(AuthPage())
