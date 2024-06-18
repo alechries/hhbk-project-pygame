@@ -4,7 +4,7 @@ from utils.model import BaseModel
 
 class UserModel(BaseModel):
     def __init__(self):
-        super().__init__() # BLABLABLA
+        super().__init__() # ABC ABC ABC
         self._username = None
 
     def initialize_table(self):
