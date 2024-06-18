@@ -1,5 +1,5 @@
 import pygame
-from modules.auth import AuthPage
+from pages.auth import AuthPage
 from utils.start_app import start_app
 from utils.model import BaseModel
 
