@@ -35,5 +35,6 @@ class MenuPage(BasePage):
 
         self.set_as_current_page_by_page_name('auth')
 
+
 if __name__ == "__main__":
     start_app(MenuPage())
