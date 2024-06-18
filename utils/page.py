@@ -25,7 +25,9 @@ class BasePage:
     def __init__(self, thema=BaseThema()):
         self.thema = thema
         self.config = Config()
-        self.DEFAULT_FONT = SysFont('Default font', 48)
+        self.DEFAULT_FONT = SysFont('Default font', 20)
+        self.MEDIUM_FONT = SysFont('Medium font', 40)
+        self.BIG_FONT = SysFont('Big font', 50)
         self.SCREEN.fill(self.thema.background)
 
     def set_as_current_page(self):
