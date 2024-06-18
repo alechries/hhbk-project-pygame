@@ -14,7 +14,9 @@ class MenuPage(BasePage):
     def __init__(self):
         super().__init__()
         self.buttons: typing.List[Button] = [
-            Button(100, 100, 100, 20, "Welcome!", self.thema.text, background=self.thema.background)
+            Button(300, 200, 200, 30, "Choose Game", self.thema.text, background=self.thema.background),
+            Button(300, 220, 200, 30, "Chess", self.thema.text, background=self.thema.background),
+            Button(300, 300, 200, 30, "Dame", self.thema.text, background=self.thema.background)
         ]
     def draw(self):
         for button in self.buttons:
