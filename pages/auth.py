@@ -11,6 +11,7 @@ class AuthPage(BasePage):
 
     def __init__(self):
         super().__init__()
+        self.page_name = 'auth'
 
         sound = SoundManager()
         sound.play('auth/app_shutdown.mp3')

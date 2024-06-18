@@ -8,6 +8,7 @@ class MenuPage(BasePage):
 
     def __init__(self):
         super().__init__()
+        self.page_name = 'menu'
 
     def draw(self):
         text = self.DEFAULT_FONT.render('Menu page', True, self.thema.button)

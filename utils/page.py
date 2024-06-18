@@ -6,6 +6,9 @@ from pygame.event import Event
 from pygame.font import SysFont, Font
 from utils.config import Config
 from utils.thema import BaseTheme
+import inspect
+import importlib
+from pathlib import Path
 
 
 config = Config()
@@ -20,9 +23,12 @@ class BasePage:
 
     PAGES_HISTORY = []
 
+    PAGES = {}
+
     PAGE_COUNTER = 0
 
     def __init__(self, thema=BaseTheme()):
+        self.page_name = 'unknown'
         self.thema = thema
         self.config = Config()
         self.DEFAULT_FONT = SysFont('Default font', 20)  # Font('assets/fonts/font.ttf', 20)
@@ -30,9 +36,31 @@ class BasePage:
         self.BIG_FONT = SysFont('Big font', 50)  # Font('assets/fonts/font.ttf', 50)
         self.SCREEN.fill(self.thema.background)
 
+    @staticmethod
+    def initialize_pages():
+        models_path = Path(__file__).parent.parent / "models"
+
+        for file in models_path.glob("*.py"):
+            if file.name == "__init__.py":
+                continue
+
+            module_name = f"models.{file.stem}"
+            module = importlib.import_module(module_name)
+
+            for name, obj in inspect.getmembers(module, inspect.isclass):
+
+                if issubclass(obj, BasePage) and obj is not BasePage:
+                    instance = obj()
+                    BasePage.PAGES[instance.page_name] = instance
+
     def set_as_current_page(self):
         BasePage.PAGES_HISTORY.append(BasePage.CURRENT_PAGE)
         BasePage.CURRENT_PAGE = self
+
+    @staticmethod
+    def set_as_current_page_by_page_name(self, page_name='unknown'):
+        if page_name in self.PAGES.keys():
+            self.PAGES[page_name].set_as_current_page()
 
     @staticmethod
     def return_to_last_page():

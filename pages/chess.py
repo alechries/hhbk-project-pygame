@@ -9,6 +9,7 @@ class ChessBoardPage(BaseBoardPage):
 
     def __init__(self):
         super().__init__()
+        self.page_name = 'chess'
 
     def draw(self):
         super().draw()

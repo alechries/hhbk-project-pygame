@@ -8,6 +8,7 @@ class TopTablePage(BasePage):
 
     def __init__(self):
         super().__init__()
+        self.page_name = 'toptable'
 
     def draw(self):
         text = self.DEFAULT_FONT.render('Top table page', True, self.thema.text)

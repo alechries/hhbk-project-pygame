@@ -9,6 +9,7 @@ class CheckersBoardPage(BaseBoardPage):
 
     def __init__(self):
         super().__init__()
+        self.page_name = 'checkers'
 
     def draw(self):
         text = self.DEFAULT_FONT.render('"Dame" page', True, self.thema.text)

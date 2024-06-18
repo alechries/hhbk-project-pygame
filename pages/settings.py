@@ -8,6 +8,7 @@ class SettingsPage(BasePage):
 
     def __init__(self):
         super().__init__()
+        self.page_name = 'settings'
 
     def draw(self):
         text = self.DEFAULT_FONT.render('Settings page', True, self.thema.text)
