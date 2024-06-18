@@ -1,14 +1,14 @@
 from utils.config import Config
 
 
-class BaseThema:
+class BaseTheme:
 
     def __init__(self):
         self.config = Config()
-
         self.background = self.config.WHITE
         self.border = self.config.BLACK
         self.text = self.config.BLACK
+        self.button = self.config.GREEN
         self.white_team = self.config.WHITE
         self.black_team = self.config.BLACK
         self.table_part_0 = self.config.WHITE

@@ -1,7 +1,7 @@
-from utils.thema import BaseThema
+from utils.thema import BaseTheme
 
 
-class DefaultThema(BaseThema):
+class DefaultTheme(BaseTheme):
 
     def __init__(self):
         super().__init__()

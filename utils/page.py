@@ -5,7 +5,7 @@ from pygame.display import set_mode
 from pygame.event import Event
 from pygame.font import SysFont, Font
 from utils.config import Config
-from utils.thema import BaseThema
+from utils.thema import BaseTheme
 
 
 config = Config()
@@ -22,7 +22,7 @@ class BasePage:
 
     PAGE_COUNTER = 0
 
-    def __init__(self, thema=BaseThema()):
+    def __init__(self, thema=BaseTheme()):
         self.thema = thema
         self.config = Config()
         self.DEFAULT_FONT = SysFont('Default font', 20)  # Font('assets/fonts/font.ttf', 20)

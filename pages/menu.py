@@ -1,6 +1,6 @@
 from utils.page import BasePage
 from pygame.event import Event
-
+import pygame_menu
 from utils.start_app import start_app
 
 
@@ -10,10 +10,9 @@ class MenuPage(BasePage):
         super().__init__()
 
     def draw(self):
-        text = self.DEFAULT_FONT.render('Menu page', True, self.thema.text)
+        text = self.DEFAULT_FONT.render('Menu page', True, self.thema.button)
         text_rect = text.get_rect(center=(self.SCREEN.get_width() // 2, self.SCREEN.get_height() // 2))
         self.SCREEN.blit(text, text_rect)
-
     def handle_event(self, event: Event):
         pass
 
