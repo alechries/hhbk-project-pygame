@@ -79,6 +79,24 @@ class CheckersBoardPage(BaseBoardPage):
             if piece.selected:
                 pygame.draw.rect(self.SCREEN, self.config.RED, [piece.x, piece.y, piece.width, piece.height], 3)
 
+                # SEARCH STEP
+
+                steps = []
+                for step_x, step_y in [
+                    (piece.board_place_column - 1, piece.board_place_row - 1),
+                    (piece.board_place_column + 1, piece.board_place_row + 1),
+                    (piece.board_place_column - 1, piece.board_place_row + 1),
+                    (piece.board_place_column + 1, piece.board_place_row - 1),
+                ]:
+                    if 0 <= step_x < self.num_blocks_horizontal and 0 <= step_y < self.num_blocks_vertical:
+                        if not any([piece_on_way.board_place_column == step_x and piece_on_way.board_place_row == step_y for piece_on_way in self.active_pieces]):
+                            steps.append((step_x, step_y))
+
+                for step_x, step_y in steps:
+                    x = self.start_x + (step_x * self.block_size)
+                    y = self.start_y + (step_y * self.block_size)
+                    pygame.draw.rect(self.SCREEN, self.config.RED, [x, y, self.block_size, self.block_size], 3)
+
     def handle_event(self, event: Event):
 
         for i, piece in enumerate(self.active_pieces):
