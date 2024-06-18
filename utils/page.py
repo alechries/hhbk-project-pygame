@@ -54,8 +54,6 @@ class BasePage:
                     if instance.page_name:
                         BasePage.PAGES[instance.page_name] = instance
 
-            print(BasePage.PAGES)
-
     def set_as_current_page(self):
         BasePage.PAGES_HISTORY.append(BasePage.CURRENT_PAGE)
         BasePage.CURRENT_PAGE = self
@@ -63,7 +61,6 @@ class BasePage:
     @staticmethod
     def set_as_current_page_by_page_name(page_name=''):
         if page_name:
-            print(page_name)
             if page_name in BasePage.PAGES.keys():
                 BasePage.PAGES[page_name].set_as_current_page()
 

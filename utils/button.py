@@ -1,4 +1,5 @@
 import pygame
+from pygame.event import Event
 
 
 class Button:
@@ -14,5 +15,7 @@ class Button:
         pygame.draw.rect(screen, self.color, self.rect)
         screen.blit(self.text_surf, self.text_rect)
 
-    def is_clicked(self, pos):
-        return self.rect.collidepoint(pos)
+    def is_clicked(self, event: Event):
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            return self.rect.collidepoint(event.pos)
+        return False
