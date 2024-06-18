@@ -28,6 +28,7 @@ class MenuPage(BasePage):
 
     def handle_event(self, event: Event):
         if event.type == pygame.MOUSEBUTTONDOWN:
+            print(event.pos)
             if self.choose_game_button.is_clicked(event.pos):
                 print("Button was clicked")
                 self.log_out_button_handler()

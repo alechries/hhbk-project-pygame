@@ -58,7 +58,7 @@ class BasePage:
         BasePage.CURRENT_PAGE = self
 
     @staticmethod
-    def set_as_current_page_by_page_name(self, page_name='unknown'):
+    def set_as_current_page_by_page_name(page_name='unknown'):
         if page_name in BasePage.PAGES.keys():
             BasePage.PAGES[page_name].set_as_current_page()
 
