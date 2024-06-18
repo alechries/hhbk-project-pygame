@@ -32,8 +32,8 @@ class MenuPage(BasePage):
         print("Hello, Alex!")
 
     def log_out_button_handler(self):
-        authPage = AuthPage()
-        authPage.set_as_current_page()
+
+        self.set_as_current_page_by_page_name('auth')
 
 if __name__ == "__main__":
     start_app(MenuPage())
