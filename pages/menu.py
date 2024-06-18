@@ -13,10 +13,13 @@ class MenuPage(BasePage):
     def __init__(self):
         super().__init__()
         self.page_name = 'menu'
+
+        self.choose_game_button = Button(300, 200, 200, 30, "Choose Game", self.thema.text, background=self.thema.background)
+        self.chess_button = Button(300, 220, 200, 30, "Chess", self.thema.text, background=self.thema.background)
+        self.checkers_game_button = Button(300, 300, 200, 30, "Dame", self.thema.text, background=self.thema.background)
+
         self.buttons: typing.List[Button] = [
-            Button(300, 200, 200, 30, "Choose Game", self.thema.text, background=self.thema.background),
-            Button(300, 220, 200, 30, "Chess", self.thema.text, background=self.thema.background),
-            Button(300, 300, 200, 30, "Dame", self.thema.text, background=self.thema.background)
+            self.choose_game_button, self.chess_button, self.checkers_game_button
         ]
 
     def draw(self):
@@ -25,8 +28,9 @@ class MenuPage(BasePage):
 
     def handle_event(self, event: Event):
         if event.type == pygame.MOUSEBUTTONDOWN:
-            print("Button was clicked")
-            self.log_out_button_handler()
+            if self.choose_game_button.is_clicked(event.pos):
+                print("Button was clicked")
+                self.log_out_button_handler()
 
     def exit_event(self):
         print("Hello, Alex!")
