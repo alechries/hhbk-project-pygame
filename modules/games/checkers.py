@@ -1,10 +1,11 @@
+from utils.board import BaseBoardPage
 from utils.page import BasePage
 from pygame.event import Event
 
 from utils.start_app import start_app
 
 
-class CheckersBoardPage(BasePage):
+class CheckersBoardPage(BaseBoardPage):
 
     def __init__(self):
         super().__init__()
