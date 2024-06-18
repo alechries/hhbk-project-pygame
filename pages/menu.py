@@ -3,9 +3,6 @@ import pygame
 from utils.page import BasePage
 from pygame.event import Event
 from utils.button import Button
-import pygame_menu
-from utils.start_app import start_app
-from pages.auth import AuthPage
 
 
 class MenuPage(BasePage):
@@ -37,7 +34,3 @@ class MenuPage(BasePage):
 
     def log_out_button_handler(self):
         self.set_as_current_page_by_page_name('auth')
-
-
-if __name__ == "__main__":
-    start_app(MenuPage())

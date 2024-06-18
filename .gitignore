@@ -131,3 +131,12 @@ cython_debug/
 # Windows specific files
 Thumbs.db
 desktop.ini
+
+# SQLite database files
+*.sqlite3
+*.sqlite
+*.db
+*.db-journal
+
+# JSON files
+*.json

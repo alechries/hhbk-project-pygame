@@ -25,6 +25,7 @@ class Config:
         self.sound_dir: str = 'assets/sounds/'
 
         self.__db_name: str = 'database.sqlite3'
+        self.__start_page: str = 'auth'
         self.__app_name: str = 'Project Pygame'
         self.__sound_volume: float = 1.0  # 0.0 to 1.0
         self.__game_difficulty_level: int = 3
@@ -41,6 +42,7 @@ class Config:
         config_data = {
             "db_name": self.__db_name,
             "app_name": self.__app_name,
+            "start_page": self.__start_page,
             "sound_volume": self.__sound_volume,
             "game_difficulty_level": self.__game_difficulty_level,
             "screen_width": self.__screen_width,
@@ -55,6 +57,7 @@ class Config:
             config_data = json.load(f)
             self.__db_name = config_data.get("db_name", self.__db_name)
             self.__app_name = config_data.get("app_name", self.__app_name)
+            self.__start_page = config_data.get("start_page", self.__app_name)
             self.__sound_volume = config_data.get("sound_volume", self.__sound_volume)
             self.__game_difficulty_level = config_data.get("game_difficulty_level", self.__game_difficulty_level)
             self.__screen_width = config_data.get("screen_width", self.__screen_width)
@@ -83,6 +86,15 @@ class Config:
     @db_name.setter
     def db_name(self, value: str):
         self.__db_name = value
+        self.save_config()
+
+    @property
+    def start_page(self) -> str:
+        return self.__start_page
+
+    @start_page.setter
+    def start_page(self, value: str):
+        self.__start_page = value
         self.save_config()
 
     @property

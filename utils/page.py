@@ -28,7 +28,7 @@ class BasePage:
     PAGE_COUNTER = 0
 
     def __init__(self, thema=BaseTheme()):
-        self.page_name = 'unknown'
+        self.page_name = ''
         self.thema = thema
         self.config = Config()
         self.DEFAULT_FONT = SysFont('Default font', 20)  # Font('assets/fonts/font.ttf', 20)
@@ -38,29 +38,34 @@ class BasePage:
 
     @staticmethod
     def initialize_pages():
-        models_path = Path(__file__).parent.parent / "models"
+        models_path = Path(__file__).parent.parent / "pages"
 
         for file in models_path.glob("*.py"):
             if file.name == "__init__.py":
                 continue
 
-            module_name = f"models.{file.stem}"
+            module_name = f"pages.{file.stem}"
             module = importlib.import_module(module_name)
 
             for name, obj in inspect.getmembers(module, inspect.isclass):
 
                 if issubclass(obj, BasePage) and obj is not BasePage:
                     instance = obj()
-                    BasePage.PAGES[instance.page_name] = instance
+                    if instance.page_name:
+                        BasePage.PAGES[instance.page_name] = instance
+
+            print(BasePage.PAGES)
 
     def set_as_current_page(self):
         BasePage.PAGES_HISTORY.append(BasePage.CURRENT_PAGE)
         BasePage.CURRENT_PAGE = self
 
     @staticmethod
-    def set_as_current_page_by_page_name(page_name='unknown'):
-        if page_name in BasePage.PAGES.keys():
-            BasePage.PAGES[page_name].set_as_current_page()
+    def set_as_current_page_by_page_name(page_name=''):
+        if page_name:
+            print(page_name)
+            if page_name in BasePage.PAGES.keys():
+                BasePage.PAGES[page_name].set_as_current_page()
 
     @staticmethod
     def return_to_last_page():

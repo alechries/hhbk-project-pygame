@@ -3,12 +3,16 @@ import pygame
 import sys
 
 from utils.config import Config
+from utils.model import BaseModel
 from utils.page import BasePage
 
 pygame.init()
 
 
 def start_app(page: BasePage):
+
+    BaseModel.initialize_tables()
+    BasePage.initialize_pages()
 
     config = Config()
     pygame.display.set_caption(config.app_name)

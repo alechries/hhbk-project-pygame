@@ -2,8 +2,6 @@ from utils.board import BaseBoardPage
 from utils.page import BasePage
 from pygame.event import Event
 
-from utils.start_app import start_app
-
 
 class ChessBoardPage(BaseBoardPage):
 
@@ -23,7 +21,3 @@ class ChessBoardPage(BaseBoardPage):
 
     def exit_event(self):
         pass
-
-
-if __name__ == "__main__":
-    start_app(ChessBoardPage())
