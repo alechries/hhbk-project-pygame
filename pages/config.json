@@ -1,9 +1,0 @@
-{
-    "db_name": "database.sqlite3",
-    "app_name": "Project Pygame",
-    "sound_volume": 1.0,
-    "game_difficulty_level": 3,
-    "screen_width": 800,
-    "screen_height": 600,
-    "frame_rate": 60
-}
