@@ -3,7 +3,7 @@ import typing
 from pygame.surface import Surface
 from pygame.display import set_mode
 from pygame.event import Event
-from pygame.font import SysFont
+from pygame.font import SysFont, Font
 from utils.config import Config
 from utils.thema import BaseThema
 
@@ -25,9 +25,9 @@ class BasePage:
     def __init__(self, thema=BaseThema()):
         self.thema = thema
         self.config = Config()
-        self.DEFAULT_FONT = SysFont('Default font', 20)
-        self.MEDIUM_FONT = SysFont('Medium font', 40)
-        self.BIG_FONT = SysFont('Big font', 50)
+        self.DEFAULT_FONT = SysFont('Default font', 20)  # Font('assets/fonts/font.ttf', 20)
+        self.MEDIUM_FONT = SysFont('Medium font', 40)  # Font('assets/fonts/font.ttf', 40)
+        self.BIG_FONT = SysFont('Big font', 50)  # Font('assets/fonts/font.ttf', 50)
         self.SCREEN.fill(self.thema.background)
 
     def set_as_current_page(self):
