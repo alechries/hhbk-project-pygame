@@ -1,15 +1,28 @@
-class Team:
+from enum import IntEnum
 
-    WHITE_TEAM = 'white_team'
-    BLACK_TEAM = 'black_team'
-class Game:
-    CHESS_GAME = 'chess_game'
-    CHECKERS_GAME = 'checkers_game'
-    TICTACTOE_GAME = 'tictactoe_game'
-class Level:
-    a = 'a'
-    b = 'b'
-    c = 'c'
-class Spawn:
-    TOP_SPAWN = 'top_spawn'
-    BOTTOM_SPAWN = 'bottom_spawn'
+
+class Team(IntEnum):
+
+    WHITE_TEAM = 1
+    BLACK_TEAM = 2
+
+
+class Game(IntEnum):
+
+    CHESS_GAME = 1
+    CHECKERS_GAME = 2
+    TICTACTOE_GAME = 3
+
+
+class Level(IntEnum):
+
+    EASY = 1
+    MEDIUM = 2
+    HARD = 3
+
+
+class Spawn(IntEnum):
+
+    TOP_SPAWN = 1
+    BOTTOM_SPAWN = 2
+
