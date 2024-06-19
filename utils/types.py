@@ -51,10 +51,6 @@ class BoardMove:
 
 class BoardPlacement:
 
-    EMPTY_CELL = 0
-    TEAM_CELL = 1
-    ENEMY_CELL = 2
-
     def __init__(self, board: typing.List[typing.List[BoardCellType]], moves: typing.List[BoardMove], game_type: GameType, level_type: LevelType, spawn_type: SpawnType):
         self.board = board
         self.moves = moves
