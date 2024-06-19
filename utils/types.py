@@ -1,3 +1,4 @@
+import typing
 from enum import IntEnum
 
 
@@ -26,3 +27,36 @@ class SpawnType(IntEnum):
     TOP_SPAWN = 1
     BOTTOM_SPAWN = 2
 
+class BoardCellType(IntEnum):
+
+    EMPTY_CELL = 0
+    TEAM_CELL = 1
+    ENEMY_CELL = 2
+
+
+class BoardMoveType(IntEnum):
+
+    NORMAL_MOVE = 0
+    COMPLICATING_MOVE = 1
+    WINNING_MOVE = 2
+
+
+class BoardMove:
+
+    def __init__(self, coord: typing.Tuple[int, int], move_type: BoardMoveType):
+        self.coord = coord
+        self.move_type = move_type
+
+
+class BoardPlacement:
+
+    EMPTY_CELL = 0
+    TEAM_CELL = 1
+    ENEMY_CELL = 2
+
+    def __init__(self, board: typing.List[typing.List[int]], moves: typing.List[BoardMove], game_type: GameType, level_type: LevelType, spawn_type: SpawnType):
+        self.board = board
+        self.moves = moves
+        self.game_type = game_type
+        self.level_type = level_type
+        self.spawn_type = spawn_type
