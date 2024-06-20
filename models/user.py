@@ -16,34 +16,18 @@ class UserModel(BaseModel):
             games_played INTEGER DEFAULT 0,
             best_result_checkers INTEGER DEFAULT 0,
             best_result_chess INTEGER DEFAULT 0,
-            chess_wins_easy INTEGER DEFAULT 0,
-            chess_wins_medium INTEGER DEFAULT 0,
-            chess_wins_hard INTEGER DEFAULT 0,
-            chess_defeats_easy INTEGER DEFAULT 0,
-            chess_defeats_medium INTEGER DEFAULT 0,
-            chess_defeats_hard INTEGER DEFAULT 0,
-            checkers_wins_easy INTEGER DEFAULT 0,
-            checkers_wins_medium INTEGER DEFAULT 0,
-            checkers_wins_hard INTEGER DEFAULT 0,
-            checkers_defeats_easy INTEGER DEFAULT 0,
-            checkers_defeats_medium INTEGER DEFAULT 0,
-            checkers_defeats_hard INTEGER DEFAULT 0,
             logged_in INTEGER DEFAULT 0
         );
         """
         self.execute_query(create_table_query)
 
     def get_fields(self) -> list:
-        return ['id', 'username', 'password', 'games_played', 'best_result_checkers', 'best_result_chess',
-                'chess_wins_easy', 'chess_wins_medium', 'chess_wins_hard', 'chess_defeats_easy',
-                'chess_defeats_medium', 'chess_defeats_hard', 'checkers_wins_easy', 'checkers_wins_medium',
-                'checkers_wins_hard', 'checkers_defeats_easy', 'checkers_defeats_medium', 'checkers_defeats_hard',
-                'logged_in']
+        return ['id', 'username', 'password', 'games_played', 'best_result_checkers', 'best_result_chess', 'logged_in']
 
     def add_user(self, username: str, password: str):
         hashed_password = self.hash_password(password)
-        add_user_query = "INSERT INTO users (username, password, games_played, best_result_checkers, best_result_chess, chess_wins_easy, chess_wins_medium, chess_wins_hard, chess_defeats_easy, chess_defeats_medium, chess_defeats_hard, checkers_wins_easy, checkers_wins_medium, checkers_wins_hard, checkers_defeats_easy, checkers_defeats_medium, checkers_defeats_hard, logged_in) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);"
-        self.execute_query(add_user_query, (username, hashed_password, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0))
+        add_user_query = "INSERT INTO users (username, password, games_played, best_result_checkers, best_result_chess, logged_in) VALUES (?, ?, ?, ?, ?, ?);"
+        self.execute_query(add_user_query, (username, hashed_password, 0, 0, 0, 0))
 
     def hash_password(self, password: str) -> str:
         return hashlib.sha256(password.encode()).hexdigest()
@@ -109,166 +93,10 @@ class UserModel(BaseModel):
             self.execute_query(update_query, (value, self._username))
 
     @property
-    def chess_wins_easy(self):
-        if self.logged_in and self._username:
-            user_data = self.get_user(self._username)
-            return user_data[0][6]
-        return None
-
-    @chess_wins_easy.setter
-    def chess_wins_easy(self, value: int):
-        if self.logged_in and self._username:
-            update_query = "UPDATE users SET chess_wins_easy = ? WHERE username = ?;"
-            self.execute_query(update_query, (value+1, self._username))
-
-    @property
-    def chess_wins_medium(self):
-        if self.logged_in and self._username:
-            user_data = self.get_user(self._username)
-            return user_data[0][7]
-        return None
-
-    @chess_wins_medium.setter
-    def chess_wins_medium(self, value: int):
-        if self.logged_in and self._username:
-            update_query = "UPDATE users SET chess_wins_medium = ? WHERE username = ?;"
-            self.execute_query(update_query, (value+1, self._username))
-
-    @property
-    def chess_wins_hard(self):
-        if self.logged_in and self._username:
-            user_data = self.get_user(self._username)
-            return user_data[0][8]
-        return None
-
-    @chess_wins_hard.setter
-    def chess_wins_hard(self, value: int):
-        if self.logged_in and self._username:
-            update_query = "UPDATE users SET chess_wins_hard = ? WHERE username = ?;"
-            self.execute_query(update_query, (value+1, self._username))
-
-    @property
-    def chess_defeats_easy(self):
-        if self.logged_in and self._username:
-            user_data = self.get_user(self._username)
-            return user_data[0][9]
-        return None
-
-    @chess_defeats_easy.setter
-    def chess_defeats_easy(self, value: int):
-        if self.logged_in and self._username:
-            update_query = "UPDATE users SET chess_defeats_easy = ? WHERE username = ?;"
-            self.execute_query(update_query, (value+1, self._username))
-
-    @property
-    def chess_defeats_medium(self):
-        if self.logged_in and self._username:
-            user_data = self.get_user(self._username)
-            return user_data[0][10]
-        return None
-
-    @chess_defeats_medium.setter
-    def chess_defeats_medium(self, value: int):
-        if self.logged_in and self._username:
-            update_query = "UPDATE users SET chess_defeats_medium = ? WHERE username = ?;"
-            self.execute_query(update_query, (value+1, self._username))
-
-    @property
-    def chess_defeats_hard(self):
-        if self.logged_in and self._username:
-            user_data = self.get_user(self._username)
-            return user_data[0][11]
-        return None
-
-    @chess_defeats_hard.setter
-    def chess_defeats_hard(self, value: int):
-        if self.logged_in and self._username:
-            update_query = "UPDATE users SET chess_defeats_hard = ? WHERE username = ?;"
-            self.execute_query(update_query, (value+1, self._username))
-
-    @property
-    def checkers_wins_easy(self):
-        if self.logged_in and self._username:
-            user_data = self.get_user(self._username)
-            return user_data[0][12]
-        return None
-
-    @checkers_wins_easy.setter
-    def checkers_wins_easy(self, value: int):
-        if self.logged_in and self._username:
-            update_query = "UPDATE users SET checkers_wins_easy = ? WHERE username = ?;"
-            self.execute_query(update_query, (value+1, self._username))
-
-    @property
-    def checkers_wins_medium(self):
-        if self.logged_in and self._username:
-            user_data = self.get_user(self._username)
-            return user_data[0][13]
-        return None
-
-    @checkers_wins_medium.setter
-    def checkers_wins_medium(self, value: int):
-        if self.logged_in and self._username:
-            update_query = "UPDATE users SET checkers_wins_medium = ? WHERE username = ?;"
-            self.execute_query(update_query, (value+1, self._username))
-
-    @property
-    def checkers_wins_hard(self):
-        if self.logged_in and self._username:
-            user_data = self.get_user(self._username)
-            return user_data[0][14]
-        return None
-
-    @checkers_wins_hard.setter
-    def checkers_wins_hard(self, value: int):
-        if self.logged_in and self._username:
-            update_query = "UPDATE users SET checkers_wins_hard = ? WHERE username = ?;"
-            self.execute_query(update_query, (value+1, self._username))
-
-    @property
-    def checkers_defeats_easy(self):
-        if self.logged_in and self._username:
-            user_data = self.get_user(self._username)
-            return user_data[0][15]
-        return None
-
-    @checkers_defeats_easy.setter
-    def checkers_defeats_easy(self, value: int):
-        if self.logged_in and self._username:
-            update_query = "UPDATE users SET checkers_defeats_easy = ? WHERE username = ?;"
-            self.execute_query(update_query, (value+1, self._username))
-
-    @property
-    def checkers_defeats_medium(self):
-        if self.logged_in and self._username:
-            user_data = self.get_user(self._username)
-            return user_data[0][16]
-        return None
-
-    @checkers_defeats_medium.setter
-    def checkers_defeats_medium(self, value: int):
-        if self.logged_in and self._username:
-            update_query = "UPDATE users SET checkers_defeats_medium = ? WHERE username = ?;"
-            self.execute_query(update_query, (value+1, self._username))
-
-    @property
-    def checkers_defeats_hard(self):
-        if self.logged_in and self._username:
-            user_data = self.get_user(self._username)
-            return user_data[0][17]
-        return None
-
-    @checkers_defeats_hard.setter
-    def checkers_defeats_hard(self, value: int):
-        if self.logged_in and self._username:
-            update_query = "UPDATE users SET checkers_defeats_hard = ? WHERE username = ?;"
-            self.execute_query(update_query, (value+1, self._username))
-
-    @property
     def logged_in(self):
         if self._username:
             user_data = self.get_user(self._username)
-            return user_data[0][18] == 1
+            return user_data[0][6] == 1
         return False
 
     @logged_in.setter
