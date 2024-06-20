@@ -15,7 +15,6 @@ pygame.init()
 def pages_initialize():
 
     models_path = Path(__file__).parent / "pages"
-    print(models_path)
 
     for file in models_path.glob("*.py"):
         if file.name == "__init__.py":

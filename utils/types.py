@@ -1,9 +1,11 @@
 import typing
 from enum import IntEnum
 
+import pygame
+
 
 class TeamType(IntEnum):
-
+    UNKNOWN_TEAM = 0
     WHITE_TEAM = 1
     BLACK_TEAM = 2
 
@@ -49,6 +51,10 @@ class BoardMove:
         self.coord = coord
         self.move_type = move_type
 
+
+class EventType(IntEnum):
+
+    ENEMY_MOVE_EVENT = pygame.USEREVENT + 1
 
 class BoardPlacement:
 

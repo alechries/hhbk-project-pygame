@@ -24,7 +24,7 @@ class Config:
         self.images_dir: str = 'assets/images/'
         self.sound_dir: str = 'assets/sounds/'
         self.board_size_percent: int = 75
-        self.board_side_lighting = True
+        self.board_side_lighting = False
 
         self.__db_name: str = 'database.sqlite3'
         self.__start_page: str = 'auth'

@@ -1,4 +1,6 @@
 import typing
+
+import pygame
 from pygame.surface import Surface
 from pygame.display import set_mode
 from pygame.event import Event

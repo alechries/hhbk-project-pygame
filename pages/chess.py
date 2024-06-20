@@ -1,8 +1,11 @@
-from utils.board import BaseBoardPage
-from utils.page import BasePage
-from pygame.event import Event
+import typing
 
-from utils.types import GameType
+from utils.board import BaseBoardPage
+from utils.cell import Cell
+from pygame.event import Event
+import pygame
+from utils.piece import Piece
+from utils.types import GameType, SpawnType, TeamType, BoardCellType
 
 
 class ChessBoardPage(BaseBoardPage):
@@ -11,15 +14,15 @@ class ChessBoardPage(BaseBoardPage):
         super().__init__(GameType.CHESS_GAME)
         self.page_name = 'chess'
 
-    def draw(self):
-        super().draw()
+    def get_moves(self, selected_piece: Piece) -> typing.List[Cell]:
 
-        text = self.DEFAULT_FONT.render('"Bauernschach" page', True, self.thema.text)
-        text_rect = text.get_rect(center=(self.SCREEN.get_width() // 2, self.SCREEN.get_height() // 2))
-        self.SCREEN.blit(text, text_rect)
+        direction = self.current_step_direction
+        return self.get_valid_moves_inside(
+            [
+                (selected_piece.board_place_column - 1, selected_piece.board_place_row + direction),
+                (selected_piece.board_place_column + 1, selected_piece.board_place_row + direction),
+            ]
+        )
 
     def handle_event(self, event: Event):
-        pass
-
-    def exit_event(self):
-        pass
+        super().handle_event(event)
