@@ -10,7 +10,6 @@ class MenuPage(BasePage):
     def __init__(self):
         super().__init__()
         self.page_name = 'menu'
-
         self.choose_game_button = Button(300, 200, 200, 30, "Choose Game", self.thema.text, background=self.thema.background)
         self.chess_game_button = Button(300, 220, 200, 30, "Chess", self.thema.text, background=self.thema.background)
         self.checkers_game_button = Button(300, 300, 200, 30, "Dame", self.thema.text, background=self.thema.background)
