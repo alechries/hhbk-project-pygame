@@ -14,15 +14,13 @@ class CheckersBoardPage(BaseBoardPage):
         super().__init__(GameType.CHESS_GAME)
         self.page_name = 'checkers'
 
-    def get_moves(self) -> typing.List[Cell]:
-        if self.selected_piece is None:
-            return []
+    def get_moves(self, selected_piece: Piece) -> typing.List[Cell]:
 
         direction = self.current_step_direction
         return self.get_valid_moves_inside(
             [
-                (self.selected_piece.board_place_column - 1, self.selected_piece.board_place_row + direction),
-                (self.selected_piece.board_place_column + 1, self.selected_piece.board_place_row + direction),
+                (selected_piece.board_place_column - 1, selected_piece.board_place_row + direction),
+                (selected_piece.board_place_column + 1, selected_piece.board_place_row + direction),
             ]
         )
 

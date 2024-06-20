@@ -9,6 +9,7 @@ from pygame.event import Event
 from utils.piece import Piece
 from utils.start_app import start_app
 from utils.types import GameType, TeamType, SpawnType, BoardCellType
+from random import choice
 
 
 class BaseBoardPage(BasePage):
@@ -70,13 +71,25 @@ class BaseBoardPage(BasePage):
 
         for row in range(self.num_blocks_vertical):
             for column in range(self.num_blocks_horizontal):
+                rect_kwargs = {}
+                border_radius = 20
+
+                if row == 0 and column == 0:
+                    rect_kwargs["border_top_left_radius"] = border_radius
+                elif row == self.num_blocks_vertical - 1 and column == 0:
+                    rect_kwargs["border_bottom_left_radius"] = border_radius
+                elif row == 0 and column == self.num_blocks_horizontal - 1:
+                    rect_kwargs["border_top_left_radius"] = border_radius
+                elif row == self.num_blocks_vertical - 1 and column == self.num_blocks_horizontal - 1:
+                    rect_kwargs["border_bottom_right_radius"] = border_radius
+
                 x = self.board_x + (column * self.block_size)
                 y = self.board_y + (row * self.block_size)
                 color = self.thema.table_part_0 if (row + column) % 2 == 0 else self.thema.table_part_1
                 pygame.draw.rect(self.SCREEN, color, [x, y, self.block_size, self.block_size])
                 if self.block_border_width > 0:
                     pygame.draw.rect(self.SCREEN, self.thema.border, [x, y, self.block_size, self.block_size],
-                                     self.block_border_width)
+                                     self.block_border_width, )
 
         if self.outer_border_width > 0:
             outer_rect = [
@@ -89,15 +102,22 @@ class BaseBoardPage(BasePage):
 
         # STORAGE PIECES
 
-        if len(self.black_team_pieces_storage) > 0:
+        black_team_pieces_storage_length = len(self.black_team_pieces_storage)
+        if black_team_pieces_storage_length > 0:
             pygame.draw.rect(self.SCREEN, self.config.GRAY,
                              [self.storage_left_x, self.storage_left_y, self.storage_left_width,
-                              self.storage_left_height])
+                              self.block_size * black_team_pieces_storage_length])
 
-        if len(self.white_team_pieces_storage) > 0:
+        white_team_pieces_storage_length = len(self.white_team_pieces_storage)
+        if white_team_pieces_storage_length > 0:
             pygame.draw.rect(self.SCREEN, self.config.GRAY,
                              [self.storage_right_x, self.storage_right_y, self.storage_right_width,
-                              self.storage_right_height])
+                              self.block_size * white_team_pieces_storage_length])
+
+        # if len(self.white_team_pieces_storage) > 0:
+        #     pygame.draw.rect(self.SCREEN, self.config.GRAY,
+        #                      [self.storage_right_x, self.storage_right_y, self.storage_right_width,
+        #                       self.storage_right_height])
 
         # ALL PIECES
 
@@ -186,9 +206,6 @@ class BaseBoardPage(BasePage):
     def get_valid_moves_inside(self, move_coord_list: typing.List[typing.Tuple[int, int]]) -> typing.List[Cell]:
         moves: typing.List[Cell] = []
 
-        if self.selected_piece is None:
-            return moves
-
         for move_column, move_row in move_coord_list:
             if 0 <= move_column < self.num_blocks_horizontal and 0 <= move_row < self.num_blocks_vertical:
                 if not any(
@@ -199,7 +216,7 @@ class BaseBoardPage(BasePage):
                     ))
         return moves
 
-    def get_moves(self) -> typing.List[Cell]:
+    def get_moves(self, selected_piece: Piece) -> typing.List[Cell]:
         return []
 
     @property
@@ -214,7 +231,47 @@ class BaseBoardPage(BasePage):
     @selected_piece.setter
     def selected_piece(self, value: Piece):
         self.__selected_piece = value
-        self.__current_moves = self.get_moves()
+        if value is not None:
+            self.__current_moves = self.get_moves(self.selected_piece)
+        else:
+            self.__current_moves = []
+
+    def make_enemy_move(self):
+
+        pieces_with_moves: typing.List[typing.Tuple[Piece, typing.List[Cell]]] = []
+
+        for enemy in self.pieces_by_current_teams_step:
+            moves = self.get_moves(enemy)
+            print(moves)
+            if len(moves) > 0:
+                pieces_with_moves.append(
+                    (enemy, moves)
+                )
+
+        self.selected_piece, moves = choice(pieces_with_moves)
+        move = choice(moves)
+
+        self.selected_piece.board_place_column = move.board_column
+        self.selected_piece.board_place_row = move.board_row
+
+        enemy_piece_on_move = self.get_current_map_with_pieces(BoardCellType.ENEMY_CELL)[move.board_row][
+            move.board_column]
+        if enemy_piece_on_move is not None:
+
+            if self.current_step == TeamType.BLACK_TEAM:
+
+                enemy_piece_on_move.board_x = self.storage_left_x
+                enemy_piece_on_move.board_y = self.storage_left_y
+                enemy_piece_on_move.board_place_row = len(self.black_team_pieces_storage)
+                enemy_piece_on_move.board_place_column = 0
+
+                self.black_team_pieces_storage.append(enemy_piece_on_move)
+
+            self.enemy_pieces_by_current_teams_step.remove(enemy_piece_on_move)
+
+        self.selected_piece = None
+
+        self.change_step_side()
 
     def handle_event(self, event: Event):
 
@@ -239,27 +296,19 @@ class BaseBoardPage(BasePage):
 
                         if self.current_step == TeamType.WHITE_TEAM:
 
-                            enemy_piece_on_move.board_x = self.storage_left_x
-                            enemy_piece_on_move.board_y = self.storage_left_y
+                            enemy_piece_on_move.board_x = self.storage_right_x
+                            enemy_piece_on_move.board_y = self.storage_right_y
                             enemy_piece_on_move.board_place_row = len(self.white_team_pieces_storage)
                             enemy_piece_on_move.board_place_column = 0
 
                             self.white_team_pieces_storage.append(enemy_piece_on_move)
 
-                        elif self.current_step == TeamType.BLACK_TEAM:
-
-                            enemy_piece_on_move.board_x = self.storage_right_x
-                            enemy_piece_on_move.board_y = self.storage_right_y
-                            enemy_piece_on_move.board_place_row = len(self.black_team_pieces_storage)
-                            enemy_piece_on_move.board_place_column = 0
-
-                            self.black_team_pieces_storage.append(enemy_piece_on_move)
-
                         self.enemy_pieces_by_current_teams_step.remove(enemy_piece_on_move)
 
                     self.selected_piece = None
-
                     self.change_step_side()
+
+                    self.make_enemy_move()
 
     def exit_event(self):
         pass
