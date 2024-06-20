@@ -36,24 +36,6 @@ class BasePage:
         self.BIG_FONT = SysFont('Big font', 50)  # Font('assets/fonts/font.ttf', 50)
         self.SCREEN.fill(self.thema.background)
 
-    @staticmethod
-    def initialize_pages():
-        models_path = Path(__file__).parent.parent / "pages"
-
-        for file in models_path.glob("*.py"):
-            if file.name == "__init__.py":
-                continue
-
-            module_name = f"pages.{file.stem}"
-            module = importlib.import_module(module_name)
-
-            for name, obj in inspect.getmembers(module, inspect.isclass):
-
-                if issubclass(obj, BasePage) and obj is not BasePage:
-                    instance = obj()
-                    if instance.page_name:
-                        BasePage.PAGES[instance.page_name] = instance
-
     def set_as_current_page(self):
         BasePage.PAGES_HISTORY.append(BasePage.CURRENT_PAGE)
         BasePage.CURRENT_PAGE = self

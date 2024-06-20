@@ -2,11 +2,13 @@ from utils.board import BaseBoardPage
 from utils.page import BasePage
 from pygame.event import Event
 
+from utils.types import GameType
+
 
 class ChessBoardPage(BaseBoardPage):
 
     def __init__(self):
-        super().__init__()
+        super().__init__(GameType.CHESS_GAME)
         self.page_name = 'chess'
 
     def draw(self):
