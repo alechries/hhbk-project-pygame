@@ -51,38 +51,6 @@ class UserModel(BaseModel):
         """
         self.execute_query(create_table_query)
 
-        """for i in range(1, 10):
-            for name in ['Alex', 'Tom', 'Erka', 'Robert', 'Enrique', 'Nhat-Huy']:
-                u = UserModel()
-                password = f'abc{randint(100, 10000)}'
-                username = f'{name.lower()}{randint(100, 20000)}'
-                u.add_user(username, password)
-                u.login(username, password)
-                for i in range(randint(1, 20)):
-                    u.increment_chess_wins_easy()
-                for i in range(randint(1, 20)):
-                    u.increment_chess_wins_medium()
-                for i in range(randint(1, 20)):
-                    u.increment_chess_wins_hard()
-                for i in range(randint(1, 20)):
-                    u.increment_chess_defeats_easy()
-                for i in range(randint(1, 20)):
-                    u.increment_chess_defeats_medium()
-                for i in range(randint(1, 20)):
-                    u.increment_chess_defeats_hard()
-                for i in range(randint(1, 20)):
-                    u.increment_checkers_wins_easy()
-                for i in range(randint(1, 20)):
-                    u.increment_checkers_wins_medium()
-                for i in range(randint(1, 20)):
-                    u.increment_checkers_wins_hard()
-                for i in range(randint(1, 20)):
-                    u.increment_checkers_defeats_easy()
-                for i in range(randint(1, 20)):
-                    u.increment_checkers_defeats_medium()
-                for i in range(randint(1, 20)):
-                    u.increment_checkers_defeats_hard()"""
-
     def get_fields(self) -> list:
         return ['id', 'username', 'password', 'games_played',
                 'chess_wins_easy', 'chess_wins_medium', 'chess_wins_hard', 'chess_defeats_easy',

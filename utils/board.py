@@ -4,6 +4,7 @@ import pygame
 
 from utils.cell import Cell
 from utils.page import BasePage
+from utils.button import Button
 from pygame.event import Event
 from os import path
 
@@ -19,9 +20,8 @@ class BaseBoardPage(BasePage):
 
     def __init__(self, game_type: GameType):
         super().__init__()
-
-        self.current_step = TeamType.WHITE_TEAM
         self.game_type = game_type
+        self.current_step = TeamType.WHITE_TEAM
         self.__selected_piece = None
         self.__current_moves = []
         self.won = False
@@ -55,30 +55,55 @@ class BaseBoardPage(BasePage):
 
         self.white_team_pieces = Piece.generate_pieces(
             self.board_x, self.board_y, self.num_blocks_horizontal, self.num_blocks_vertical,
-            self.block_size, self.block_size, game_type, TeamType.WHITE_TEAM, SpawnType.BOTTOM_SPAWN
+            self.block_size, self.block_size, self.game_type, TeamType.WHITE_TEAM, SpawnType.BOTTOM_SPAWN
         )
         self.white_team_pieces_storage: typing.List[Piece] = []
         self.black_team_pieces = Piece.generate_pieces(
             self.board_x, self.board_y, self.num_blocks_horizontal, self.num_blocks_vertical,
-            self.block_size, self.block_size, game_type, TeamType.BLACK_TEAM, SpawnType.TOP_SPAWN)
+            self.block_size, self.block_size, self.game_type, TeamType.BLACK_TEAM, SpawnType.TOP_SPAWN)
         self.black_team_pieces_storage: typing.List[Piece] = []
 
-        background_image = pygame.image.load(path.join(self.config.images_dir, 'board_background.png')).convert()
-        self.background_image = pygame.transform.smoothscale(background_image, self.SCREEN.get_size())
+        self.winner_overlay = pygame.Surface((self.SCREEN.get_width(), self.SCREEN.get_height()), pygame.SRCALPHA)
+        self.winner_overlay.fill(self.thema.winner_glow)
+
+        self.loser_overlay = pygame.Surface((self.SCREEN.get_width(), self.SCREEN.get_height()), pygame.SRCALPHA)
+        self.loser_overlay.fill(self.thema.loser_glow)
+
+        button_width = 300
+        button_height = 50
+        buttons_margin = 20
+        button_x = self.SCREEN.get_width() // 2 - button_width // 2
+        button_y = self.SCREEN.get_height() // 2.5
+
+        self.menu_button = Button(button_x, button_y, button_width, button_height, "Menu",
+                                  self.thema.button_text, background=self.thema.button_background, )
+        button_y += button_height + buttons_margin
+        self.repeat_button = Button(button_x, button_y, button_width, button_height, "Spiel wiederholen",
+                                    self.thema.button_text, background=self.thema.button_background, )
+
+        button_y += button_height + buttons_margin
+        self.toptable_button = Button(button_x, button_y, button_width, button_height, "Rating-Tabelle",
+                                    self.thema.button_text, background=self.thema.button_background, )
+
+        self.drawing_button_list = (
+            self.menu_button,
+            self.repeat_button,
+            self.toptable_button
+        )
 
     def change_step_side(self):
-        if self.won:
-            self.current_step = TeamType.UNKNOWN_TEAM
+        if self.won or self.check_winner():
+            self.won = True
+
         elif self.current_step == TeamType.WHITE_TEAM:
             self.current_step = TeamType.BLACK_TEAM
         elif self.current_step == TeamType.BLACK_TEAM:
             self.current_step = TeamType.WHITE_TEAM
 
     def draw(self):
+        super().draw()
 
         # BOARD
-
-        self.SCREEN.blit(self.background_image, (0, 0))
 
         outer_rect = [
             self.board_x - self.block_border_width // 2,
@@ -166,6 +191,25 @@ class BaseBoardPage(BasePage):
                 self.block_size, self.block_size
             ], 3, border_radius=5)
 
+        # WINNER OR LOSER
+
+        if self.won:
+            if self.current_step == TeamType.WHITE_TEAM:
+                self.SCREEN.blit(self.winner_overlay, (0, 0))
+                text = self.BIG_FONT.render('SIE SIND GEWINNER :)', True, self.thema.winner_notification_text,
+                                            self.thema.winner_notification_background)
+                text_rect = text.get_rect(center=(self.SCREEN.get_width() // 2, self.SCREEN.get_height() // 3))
+                self.SCREEN.blit(text, text_rect)
+            elif self.current_step == TeamType.BLACK_TEAM:
+                self.SCREEN.blit(self.loser_overlay, (0, 0))
+                text = self.BIG_FONT.render('SIE SIND VERLIERER :(', True, self.thema.loser_notification_text,
+                                            self.thema.loser_notification_background)
+                text_rect = text.get_rect(center=(self.SCREEN.get_width() // 2, self.SCREEN.get_height() // 3))
+                self.SCREEN.blit(text, text_rect)
+
+            for button in self.drawing_button_list:
+                button.draw(self.SCREEN)
+
     def get_current_map_with_pieces(self, board_cell_type=BoardCellType.EMPTY_CELL):
         matrix = [[None for _ in range(self.num_blocks_horizontal)] for _ in range(self.num_blocks_vertical)]
 
@@ -239,6 +283,24 @@ class BaseBoardPage(BasePage):
     def selected_piece(self) -> Piece:
         return self.__selected_piece
 
+    def restart_game(self):
+
+        self.__selected_piece = None
+        self.__current_moves = []
+
+        self.white_team_pieces = Piece.generate_pieces(
+            self.board_x, self.board_y, self.num_blocks_horizontal, self.num_blocks_vertical,
+            self.block_size, self.block_size, self.game_type, TeamType.WHITE_TEAM, SpawnType.BOTTOM_SPAWN
+        )
+        self.white_team_pieces_storage: typing.List[Piece] = []
+        self.black_team_pieces = Piece.generate_pieces(
+            self.board_x, self.board_y, self.num_blocks_horizontal, self.num_blocks_vertical,
+            self.block_size, self.block_size, self.game_type, TeamType.BLACK_TEAM, SpawnType.TOP_SPAWN)
+        self.black_team_pieces_storage: typing.List[Piece] = []
+
+        self.current_step = TeamType.WHITE_TEAM
+        self.won = False
+
     @selected_piece.setter
     def selected_piece(self, value: Piece):
         self.__selected_piece = value
@@ -288,7 +350,6 @@ class BaseBoardPage(BasePage):
         if enemy_piece_on_move is not None:
 
             if self.current_step == TeamType.BLACK_TEAM:
-
                 enemy_piece_on_move.board_x = self.storage_left_x
                 enemy_piece_on_move.board_y = self.storage_left_y
                 enemy_piece_on_move.board_place_row = len(self.black_team_pieces_storage)
@@ -300,7 +361,15 @@ class BaseBoardPage(BasePage):
 
     def handle_event(self, event: Event):
 
-        if event.type == EventType.ENEMY_MOVE_EVENT:
+        if self.won:
+            if self.repeat_button.is_clicked(event):
+                self.restart_game()
+            elif self.menu_button.is_clicked(event):
+                self.set_as_current_page_by_page_name('menu')
+            elif self.toptable_button.is_clicked(event):
+                self.set_as_current_page_by_page_name('toptable')
+
+        elif event.type == EventType.ENEMY_MOVE_EVENT:
             pygame.time.set_timer(EventType.ENEMY_MOVE_EVENT, 0)
 
             self.make_enemy_move()
@@ -325,12 +394,12 @@ class BaseBoardPage(BasePage):
                         self.selected_piece.board_place_column = move.board_column
                         self.selected_piece.board_place_row = move.board_row
 
-                        enemy_piece_on_move = self.get_current_map_with_pieces(BoardCellType.ENEMY_CELL)[move.board_row][
+                        enemy_piece_on_move = \
+                        self.get_current_map_with_pieces(BoardCellType.ENEMY_CELL)[move.board_row][
                             move.board_column]
                         if enemy_piece_on_move is not None:
 
                             if self.current_step == TeamType.WHITE_TEAM:
-
                                 enemy_piece_on_move.board_x = self.storage_right_x
                                 enemy_piece_on_move.board_y = self.storage_right_y
                                 enemy_piece_on_move.board_place_row = len(self.white_team_pieces_storage)
@@ -340,15 +409,10 @@ class BaseBoardPage(BasePage):
 
                             self.enemy_pieces_by_current_teams_step.remove(enemy_piece_on_move)
 
-                        if self.check_winner():
-                            self.won = True
-
                         self.selected_piece = None
                         self.change_step_side()
 
                         pygame.time.set_timer(EventType.ENEMY_MOVE_EVENT, 1000)
-
-
 
     def exit_event(self):
         pass

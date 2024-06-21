@@ -25,6 +25,8 @@ class AuthPage(BasePage):
         self.BIG_FONT = pygame.font.SysFont('Arial', 50)
 
     def draw(self):
+        super().draw()
+        
         # Background color (light blue)
         self.SCREEN.fill((173, 216, 230))
 

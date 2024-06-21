@@ -7,7 +7,9 @@ class Config:
     WHITE = (255, 255, 255)
     BLACK = (0, 0, 0)
     RED = (255, 0, 0)
+    DARK_RED = (204, 0, 0)
     GREEN = (0, 255, 0)
+    DARK_GREEN = (102, 204, 0)
     BLUE = (0, 0, 255)
     YELLOW = (255, 255, 0)
     CYAN = (0, 255, 255)
@@ -17,6 +19,9 @@ class Config:
     PURPLE = (128, 0, 128)
     PINK = (255, 192, 203)
     BROWN = (165, 42, 42)
+    BLUE_TRANSPARENT = (0, 0, 255, 128)
+    GREEN_TRANSPARENT = (0, 255, 0, 128)
+    RED_TRANSPARENT = (255, 0, 0, 128)
 
     def __init__(self, config_file='config.json'):
         self.config_file = config_file

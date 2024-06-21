@@ -18,6 +18,8 @@ class MenuPage(BasePage):
         ]
 
     def draw(self):
+        super().draw()
+
         for button in self.buttons:
             button.draw(self.SCREEN)
 

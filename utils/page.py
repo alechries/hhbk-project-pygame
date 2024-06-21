@@ -10,6 +10,7 @@ from utils.thema import BaseTheme
 import inspect
 import importlib
 from pathlib import Path
+from os import path
 
 config = Config()
 screen: Surface = set_mode((config.screen_width, config.screen_height))
@@ -29,6 +30,9 @@ class BasePage:
         self.MEDIUM_FONT = SysFont('Medium font', 40)
         self.BIG_FONT = SysFont('Big font', 50)
         self.SCREEN.fill(self.thema.background)
+
+        background_image = pygame.image.load(path.join(self.config.images_dir, 'background.png')).convert()
+        self.background_image = pygame.transform.smoothscale(background_image, self.SCREEN.get_size())
 
     @staticmethod
     def initialize_pages():
@@ -60,9 +64,7 @@ class BasePage:
             BasePage.PAGES_HISTORY[-1].set_as_current_page()
 
     def draw(self):
-        text = self.DEFAULT_FONT.render('Page not implemented', True, self.thema.text)
-        text_rect = text.get_rect(center=(self.SCREEN.get_width() // 2, self.SCREEN.get_height() // 2))
-        self.SCREEN.blit(text, text_rect)
+        self.SCREEN.blit(self.background_image, (0, 0))
 
     def handle_event(self, event: Event):
         pass

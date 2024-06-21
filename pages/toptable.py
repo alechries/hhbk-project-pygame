@@ -45,6 +45,7 @@ class TopTablePage(BasePage):
 
 
     def draw(self):
+        super().draw()
 
         pygame.display.set_caption('Scoreboard')
 

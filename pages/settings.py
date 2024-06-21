@@ -9,6 +9,8 @@ class SettingsPage(BasePage):
         self.page_name = 'settings'
 
     def draw(self):
+        super().draw()
+
         text = self.DEFAULT_FONT.render('Settings page', True, self.thema.text)
         text_rect = text.get_rect(center=(self.SCREEN.get_width() // 2, self.SCREEN.get_height() // 2))
         self.SCREEN.blit(text, text_rect)
