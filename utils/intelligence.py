@@ -1,8 +1,9 @@
 
-##class Intelligence:
+# class Intelligence:
 
-    #def __init__(self):
-    # pass
+#     def __init__(self):
+#         pass
+#
 import pygame
 import sys
 import math
@@ -70,7 +71,7 @@ class Board:
         self.board[piece.row][piece.col], self.board[row][col] = self.board[row][col], self.board[piece.row][piece.col]
         piece.move(row, col)
 
-        if row == ROWS - 1 or row == 0:
+        if (row == ROWS - 1 and piece.color == RED) or (row == 0 and piece.color == WHITE):
             piece.make_king()
             if piece.color == WHITE:
                 self.white_kings += 1
@@ -219,7 +220,7 @@ class Game:
     def _init(self):
         self.selected = None
         self.board = Board()
-        self.turn = RED
+        self.turn = WHITE
         self.valid_moves = {}
 
     def update(self):
@@ -277,8 +278,7 @@ class Game:
         self.board = board
         self.change_turn()
 
-# Minimax Algorithmus
-def minimax(position, depth, max_player, game):
+def minimax(position, depth, alpha, beta, max_player, game):
     if depth == 0 or position.winner() is not None:
         return position.evaluate(), position
 
@@ -286,8 +286,11 @@ def minimax(position, depth, max_player, game):
         max_eval = -math.inf
         best_move = None
         for move in get_all_moves(position, WHITE, game):
-            evaluation = minimax(move, depth - 1, False, game)[0]
+            evaluation = minimax(move, depth - 1, alpha, beta, False, game)[0]
             max_eval = max(max_eval, evaluation)
+            alpha = max(alpha, evaluation)
+            if beta <= alpha:
+                break
             if max_eval == evaluation:
                 best_move = move
         return max_eval, best_move
@@ -295,11 +298,20 @@ def minimax(position, depth, max_player, game):
         min_eval = math.inf
         best_move = None
         for move in get_all_moves(position, RED, game):
-            evaluation = minimax(move, depth - 1, True, game)[0]
+            evaluation = minimax(move, depth - 1, alpha, beta, True, game)[0]
             min_eval = min(min_eval, evaluation)
+            beta = min(beta, evaluation)
+            if beta <= alpha:
+                break
             if min_eval == evaluation:
                 best_move = move
         return min_eval, best_move
+    
+def simulate_move(piece, move, board, game, skip):
+    board.move(piece, move[0], move[1])
+    if skip:
+        board.remove(skip)
+    return board
 
 def get_all_moves(board, color, game):
     moves = []
@@ -314,11 +326,7 @@ def get_all_moves(board, color, game):
 
     return moves
 
-def simulate_move(piece, move, board, game, skip):
-    board.move(piece, move[0], move[1])
-    if skip:
-        board.remove(skip)
-    return board
+
 
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('Checkers')
@@ -332,7 +340,7 @@ def main():
         clock.tick(60)
 
         if game.turn == WHITE:
-            value, new_board = minimax(game.get_board(), 3, WHITE, game)
+            value, new_board = minimax(game.get_board(), 7, -math.inf, math.inf, True, game)
             game.ai_move(new_board)
 
         if game.get_board().winner() is not None:
@@ -353,3 +361,4 @@ def main():
     pygame.quit()
 
 main()
+
