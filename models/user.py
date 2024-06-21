@@ -1,5 +1,6 @@
 import hashlib
 from utils.model import BaseModel
+from random import randint
 
 
 class UserModel(BaseModel):
@@ -32,6 +33,11 @@ class UserModel(BaseModel):
         );
         """
         self.execute_query(create_table_query)
+
+        for name in ['Alex', 'Tom', 'Erka', 'Rober', 'Enruqie', 'NhatHuy']:
+            u = UserModel()
+            u.add_user(username=f'{name.lower()}{randint(100, 20000)}', password=f'abc{randint(100, 10000)}')
+            # TODO INCREMENT
 
     def get_fields(self) -> list:
         return ['id', 'username', 'password', 'games_played', 'best_result_checkers', 'best_result_chess',
