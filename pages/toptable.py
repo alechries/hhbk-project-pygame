@@ -26,9 +26,6 @@ class TopTablePage(BasePage):
         self.gamemode_checkers_button = Button(670, 20, 120, 30, "Checkers", self.thema.text,
                                                background=self.thema.background)
 
-        for user in self.user_list:
-            print(user)
-
     def draw(self):
 
         MARGIN = 5

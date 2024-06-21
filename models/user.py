@@ -7,6 +7,22 @@ class UserModel(BaseModel):
     def __init__(self):
         super().__init__() # ABC ABC ABC
         self._username = None
+        self._user_id = None
+        self._hashed_password = None
+        self._games_played = None
+        self._chess_wins_easy = None
+        self._chess_wins_medium = None
+        self._chess_wins_hard = None
+        self._chess_defeats_easy = None
+        self._chess_defeats_medium = None
+        self._chess_defeats_hard = None
+        self._checkers_wins_easy = None
+        self._checkers_wins_medium = None
+        self._checkers_wins_hard = None
+        self._checkers_defeats_easy = None
+        self._checkers_defeats_medium = None
+        self._checkers_defeats_hard = None
+
 
     def initialize_table(self):
         create_table_query = """
@@ -44,7 +60,7 @@ class UserModel(BaseModel):
 #                u.increment_chess_wins_easy()
 
     def get_fields(self) -> list:
-        return ['id', 'username', 'password', 'games_played', 'best_result_checkers', 'best_result_chess',
+        return ['id', 'username', 'password', 'games_played',
                 'chess_wins_easy', 'chess_wins_medium', 'chess_wins_hard', 'chess_defeats_easy',
                 'chess_defeats_medium', 'chess_defeats_hard', 'checkers_wins_easy', 'checkers_wins_medium',
                 'checkers_wins_hard', 'checkers_defeats_easy', 'checkers_defeats_medium', 'checkers_defeats_hard',
@@ -72,6 +88,9 @@ class UserModel(BaseModel):
     def get_data(self):
         get_data_query = "SELECT * FROM users;"
         return self.fetch_query(get_data_query)
+
+    def init_by_data(self, data: list):
+        self._user_id, self._username, self._hashed_password, self._games_played, self._chess_wins_easy, self._chess_wins_medium, self._chess_wins_hard, self._chess_defeats_easy, self._chess_defeats_medium, self._chess_defeats_hard, self._checkers_wins_easy, self._checkers_wins_medium, self._checkers_wins_hard, self._checkers_defeats_easy, self._checkers_defeats_medium, self._checkers_defeats_hard = data
 
     def update_games_played(self, username: str, games_played: int):
         update_query = "UPDATE users SET games_played = ? WHERE username = ?;"
