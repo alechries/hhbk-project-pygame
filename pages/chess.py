@@ -3,9 +3,10 @@ import typing
 from utils.board import BaseBoardPage
 from utils.cell import Cell
 from pygame.event import Event
+from random import choice
 import pygame
 from utils.piece import Piece
-from utils.types import GameType, SpawnType, TeamType, BoardCellType
+from utils.types import GameType, SpawnType, TeamType, BoardCellType, LevelType
 
 
 class ChessBoardPage(BaseBoardPage):
@@ -23,6 +24,18 @@ class ChessBoardPage(BaseBoardPage):
                 (selected_piece.board_place_column + 1, selected_piece.board_place_row + direction),
             ]
         )
+
+    def minmax_move(self, pieces_with_moves: typing.List[typing.Tuple[Piece, typing.List[Cell]]]) -> Cell:
+
+        if self.config.game_difficulty_level == LevelType.EASY:
+            self.selected_piece, moves = choice(pieces_with_moves)
+            move = choice(moves)
+            return move
+        else:
+            self.selected_piece, moves = choice(pieces_with_moves)
+            move = choice(moves)
+            return move
+        # current_map_enemy = self.get_current_map_with_pieces(self.get_current_map_with_pieces(BoardCellType.ENEMY_CELL))
 
     def handle_event(self, event: Event):
         super().handle_event(event)

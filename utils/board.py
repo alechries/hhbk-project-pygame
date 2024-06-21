@@ -183,6 +183,9 @@ class BaseBoardPage(BasePage):
     def inactive_pieces(self) -> typing.List[Piece]:
         return self.white_team_pieces_storage + self.black_team_pieces_storage
 
+    def minmax_move(self, pieces_with_moves: typing.List[typing.Tuple[Piece, typing.List[Cell]]]) -> Cell:
+        pass
+
     @property
     def pieces_by_current_teams_step(self) -> typing.List[Piece]:
         if self.current_step == TeamType.WHITE_TEAM:
@@ -258,8 +261,10 @@ class BaseBoardPage(BasePage):
                     (enemy, moves)
                 )
 
-        self.selected_piece, moves = choice(pieces_with_moves)
-        move = choice(moves)
+        # self.selected_piece, moves = choice(pieces_with_moves)
+        # move = choice(moves)
+
+        move = self.minmax_move(pieces_with_moves)
 
         self.selected_piece.board_place_column = move.board_column
         self.selected_piece.board_place_row = move.board_row
