@@ -5,6 +5,7 @@ import pygame
 from utils.cell import Cell
 from utils.page import BasePage
 from pygame.event import Event
+from os import path
 
 from time import sleep
 
@@ -62,6 +63,9 @@ class BaseBoardPage(BasePage):
             self.block_size, self.block_size, game_type, TeamType.BLACK_TEAM, SpawnType.TOP_SPAWN)
         self.black_team_pieces_storage: typing.List[Piece] = []
 
+        background_image = pygame.image.load(path.join(self.config.images_dir, 'board_background.png')).convert()
+        self.background_image = pygame.transform.smoothscale(background_image, self.SCREEN.get_size())
+
     def change_step_side(self):
         if self.won:
             self.current_step = TeamType.UNKNOWN_TEAM
@@ -73,6 +77,16 @@ class BaseBoardPage(BasePage):
     def draw(self):
 
         # BOARD
+
+        self.SCREEN.blit(self.background_image, (0, 0))
+
+        outer_rect = [
+            self.board_x - self.block_border_width // 2,
+            self.board_y - self.block_border_width // 2,
+            self.num_blocks_horizontal * self.block_size + self.block_border_width,
+            self.num_blocks_vertical * self.block_size + self.block_border_width
+        ]
+        pygame.draw.rect(self.SCREEN, self.thema.background, outer_rect, border_radius=5)
 
         for row in range(self.num_blocks_vertical):
             for column in range(self.num_blocks_horizontal):
