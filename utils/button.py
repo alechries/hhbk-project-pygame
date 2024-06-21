@@ -12,7 +12,7 @@ class Button:
         self.text_rect = self.text_surf.get_rect(center=self.rect.center)
 
     def draw(self, screen):
-        pygame.draw.rect(screen, self.color, self.rect)
+        pygame.draw.rect(screen, self.color, self.rect, border_radius=5)
         screen.blit(self.text_surf, self.text_rect)
 
     def is_clicked(self, event: Event):

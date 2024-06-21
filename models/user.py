@@ -22,6 +22,7 @@ class UserModel(BaseModel):
         self._checkers_defeats_easy = None
         self._checkers_defeats_medium = None
         self._checkers_defeats_hard = None
+        self._logged_in = None
 
 
     def initialize_table(self):
@@ -50,14 +51,37 @@ class UserModel(BaseModel):
         """
         self.execute_query(create_table_query)
 
-#        for name in ['Alex', 'Tom', 'Erka', 'Rober', 'Enruqie', 'NhatHuy']:
-#            u = UserModel()
-#            password = f'abc{randint(100, 10000)}'
-#            username = f'{name.lower()}{randint(100, 20000)}'
-#            u.add_user(username, password)
-#            u.login(username, password)
-#            for i in range(randint(1, 20)):
-#                u.increment_chess_wins_easy()
+        """for i in range(1, 10):
+            for name in ['Alex', 'Tom', 'Erka', 'Robert', 'Enrique', 'Nhat-Huy']:
+                u = UserModel()
+                password = f'abc{randint(100, 10000)}'
+                username = f'{name.lower()}{randint(100, 20000)}'
+                u.add_user(username, password)
+                u.login(username, password)
+                for i in range(randint(1, 20)):
+                    u.increment_chess_wins_easy()
+                for i in range(randint(1, 20)):
+                    u.increment_chess_wins_medium()
+                for i in range(randint(1, 20)):
+                    u.increment_chess_wins_hard()
+                for i in range(randint(1, 20)):
+                    u.increment_chess_defeats_easy()
+                for i in range(randint(1, 20)):
+                    u.increment_chess_defeats_medium()
+                for i in range(randint(1, 20)):
+                    u.increment_chess_defeats_hard()
+                for i in range(randint(1, 20)):
+                    u.increment_checkers_wins_easy()
+                for i in range(randint(1, 20)):
+                    u.increment_checkers_wins_medium()
+                for i in range(randint(1, 20)):
+                    u.increment_checkers_wins_hard()
+                for i in range(randint(1, 20)):
+                    u.increment_checkers_defeats_easy()
+                for i in range(randint(1, 20)):
+                    u.increment_checkers_defeats_medium()
+                for i in range(randint(1, 20)):
+                    u.increment_checkers_defeats_hard()"""
 
     def get_fields(self) -> list:
         return ['id', 'username', 'password', 'games_played',
@@ -86,11 +110,11 @@ class UserModel(BaseModel):
         return self.fetch_query(get_user_query, (username,))
 
     def get_data(self):
-        get_data_query = "SELECT * FROM users;"
-        return self.fetch_query(get_data_query)
+        get_data_query = f"SELECT {','.join(self.get_fields())} FROM users;"
+        return self.fetch_query(get_data_query,)
 
     def init_by_data(self, data: list):
-        self._user_id, self._username, self._hashed_password, self._games_played, self._chess_wins_easy, self._chess_wins_medium, self._chess_wins_hard, self._chess_defeats_easy, self._chess_defeats_medium, self._chess_defeats_hard, self._checkers_wins_easy, self._checkers_wins_medium, self._checkers_wins_hard, self._checkers_defeats_easy, self._checkers_defeats_medium, self._checkers_defeats_hard = data
+        self._user_id, self._username, self._hashed_password, self._games_played, self._chess_wins_easy, self._chess_wins_medium, self._chess_wins_hard, self._chess_defeats_easy, self._chess_defeats_medium, self._chess_defeats_hard, self._checkers_wins_easy, self._checkers_wins_medium, self._checkers_wins_hard, self._checkers_defeats_easy, self._checkers_defeats_medium, self._checkers_defeats_hard, self._logged_in = data
 
     def update_games_played(self, username: str, games_played: int):
         update_query = "UPDATE users SET games_played = ? WHERE username = ?;"

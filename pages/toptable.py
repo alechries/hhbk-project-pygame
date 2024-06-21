@@ -6,67 +6,150 @@ from models.user import UserModel
 import pygame
 import sys
 
-from utils.types import GameType
+from utils.types import GameType, LevelType
 
 
 class TopTablePage(BasePage):
 
     def __init__(self):
         super().__init__()
-        self.user_list = UserModel().get_data()
-        self.game_type: GameType = GameType.UNKNOWN
+        self.MARGIN = 5
+        self.COLUMNS = 4
+        self.ROWS = 13
+        self.PADDING_TABLE_PERCENT = 5
+        self.PADDING_TABLE_WIDTH = self.SCREEN.get_width() // 100 * self.PADDING_TABLE_PERCENT
+        self.PADDING_TABLE_HEIGHT = self.PADDING_TABLE_WIDTH
+        self.CELL_WIDTH = (self.SCREEN.get_width() - self.PADDING_TABLE_WIDTH * 2 - (self.COLUMNS - 1) * self.MARGIN) // self.COLUMNS
+        self.CELL_HEIGHT = (self.SCREEN.get_height() - self.PADDING_TABLE_HEIGHT * 2 - (self.ROWS - 1) * self.MARGIN) // self.ROWS
+        self.user_data_list = UserModel().get_data()
+        self.game_type: GameType = GameType.CHESS_GAME
+        self.level_type: LevelType = LevelType.EASY
         self.page_name = 'toptable'
-        self.difficulty_easy_button = Button(5, 20, 120, 30, "Easy", self.thema.text, background=self.thema.background)
-        self.difficulty_medium_button = Button(130, 20, 120, 30, "Medium", self.thema.text,
+        self.difficulty_easy_button = Button(self.PADDING_TABLE_WIDTH + 5, self.PADDING_TABLE_HEIGHT, 120, 30, "Easy", self.thema.text, background=self.thema.background)
+        self.difficulty_medium_button = Button(self.PADDING_TABLE_WIDTH + 130, self.PADDING_TABLE_HEIGHT, 120, 30, "Medium", self.thema.text,
                                                background=self.thema.background)
-        self.difficulty_hard_button = Button(255, 20, 120, 30, "Hard", self.thema.text,
+        self.difficulty_hard_button = Button(self.PADDING_TABLE_WIDTH + 255, self.PADDING_TABLE_HEIGHT, 120, 30, "Hard", self.thema.text,
                                              background=self.thema.background)
-        self.gamemode_chess_button = Button(545, 20, 120, 30, "Chess", self.thema.text,
+        self.gamemode_chess_button = Button(self.SCREEN.get_width() - self.PADDING_TABLE_WIDTH -245, self.PADDING_TABLE_HEIGHT, 120, 30, "Chess", self.thema.text,
                                             background=self.thema.background)
-        self.gamemode_checkers_button = Button(670, 20, 120, 30, "Checkers", self.thema.text,
+        self.gamemode_checkers_button = Button(self.SCREEN.get_width() - self.PADDING_TABLE_WIDTH -120, self.PADDING_TABLE_HEIGHT, 120, 30, "Checkers", self.thema.text,
                                                background=self.thema.background)
+        self.menu_button = Button(self.SCREEN.get_width() // 2 - 60, self.SCREEN.get_height() - self.PADDING_TABLE_HEIGHT * 2 + self.MARGIN, 120, 30, "Back", self.thema.text, background=self.thema.background)
+
+        self.user_list = []
+        for user_data in self.user_data_list:
+            user = UserModel()
+            user.init_by_data(user_data)
+            self.user_list.append(user)
+
+
 
     def draw(self):
-
-        MARGIN = 5
-        COLUMNS = 4
-        ROWS = 7
-        PADDING_TABLE_PERCENT = 5
-        PADDING_TABLE_WIDTH = self.SCREEN.get_width() // 100 * PADDING_TABLE_PERCENT
-        PADDING_TABLE_HEIGHT = PADDING_TABLE_WIDTH
-        CELL_WIDTH = (self.SCREEN.get_width() - PADDING_TABLE_WIDTH * 2 - (COLUMNS - 1) * MARGIN) // COLUMNS
-        CELL_HEIGHT = (self.SCREEN.get_height() - PADDING_TABLE_HEIGHT * 2 - (ROWS - 1) * MARGIN) // ROWS
 
         pygame.display.set_caption('Scoreboard')
 
         font = pygame.font.SysFont(None, 30)
 
-        table_data = [['' for _ in range(COLUMNS)] for _ in range(ROWS)]
+        table_data = [['' for _ in range(self.COLUMNS)] for _ in range(self.ROWS)]
         table_data[1] = ['#', 'Username', 'Wins', 'Defeats']
+        table_data_index = 2
+        scoreboard_position = 1
+        scoreboard_list = []
+        if self.game_type == GameType.CHESS_GAME:
+            if self.level_type == LevelType.EASY:
+                scoreboard_list = sorted(self.user_list, key=lambda x: x._chess_wins_easy, reverse=True)[:10]
+                for score in scoreboard_list:
+                    table_data[table_data_index] = [str(scoreboard_position), str(score._username), str(score._chess_wins_easy), str(score._chess_defeats_easy)]
+                    table_data_index += 1
+                    scoreboard_position += 1
+            elif self.level_type == LevelType.MEDIUM:
+                scoreboard_list = sorted(self.user_list, key=lambda x: x._chess_wins_medium, reverse=True)[:10]
+                for score in scoreboard_list:
+                    table_data[table_data_index] = [str(scoreboard_position), str(score._username), str(score._chess_wins_medium), str(score._chess_defeats_medium)]
+                    table_data_index += 1
+                    scoreboard_position += 1
+            elif self.level_type == LevelType.HARD:
+                scoreboard_list = sorted(self.user_list, key=lambda x: x._chess_wins_hard, reverse=True)[:10]
+                for score in scoreboard_list:
+                    table_data[table_data_index] = [str(scoreboard_position), str(score._username), str(score._chess_wins_hard), str(score._chess_defeats_hard)]
+                    table_data_index += 1
+                    scoreboard_position += 1
+        elif self.game_type == GameType.CHECKERS_GAME:
+            if self.level_type == LevelType.EASY:
+                scoreboard_list = sorted(self.user_list, key=lambda x: x._checkers_wins_easy, reverse=True)[:10]
+                for score in scoreboard_list:
+                    table_data[table_data_index] = [str(scoreboard_position), str(score._username), str(score._checkers_wins_easy), str(score._checkers_defeats_easy)]
+                    table_data_index += 1
+                    scoreboard_position += 1
+            elif self.level_type == LevelType.MEDIUM:
+                scoreboard_list = sorted(self.user_list, key=lambda x: x._checkers_wins_medium, reverse=True)[:10]
+                for score in scoreboard_list:
+                    table_data[table_data_index] = [str(scoreboard_position), str(score._username), str(score._checkers_wins_medium), str(score._checkers_defeats_medium)]
+                    table_data_index += 1
+                    scoreboard_position += 1
+            elif self.level_type == LevelType.HARD:
+                scoreboard_list = sorted(self.user_list, key=lambda x: x._checkers_wins_hard, reverse=True)[:10]
+                for score in scoreboard_list:
+                    table_data[table_data_index] = [str(scoreboard_position), str(score._username), str(score._checkers_wins_hard), str(score._checkers_defeats_hard)]
+                    table_data_index += 1
+                    scoreboard_position += 1
 
         self.SCREEN.fill(Config.WHITE)
+        if self.game_type == GameType.CHESS_GAME:
+            self.gamemode_chess_button.color = Config.BLUE
+            self.gamemode_checkers_button.color = Config.BLACK
+        elif self.game_type == GameType.CHECKERS_GAME:
+            self.gamemode_chess_button.color = Config.BLACK
+            self.gamemode_checkers_button.color = Config.BLUE
+
+        if self.level_type == LevelType.EASY:
+            self.difficulty_easy_button.color = Config.BLUE
+            self.difficulty_medium_button.color = Config.BLACK
+            self.difficulty_hard_button.color = Config.BLACK
+        elif self.level_type == LevelType.MEDIUM:
+            self.difficulty_easy_button.color = Config.BLACK
+            self.difficulty_medium_button.color = Config.BLUE
+            self.difficulty_hard_button.color = Config.BLACK
+        elif self.level_type == LevelType.HARD:
+            self.difficulty_easy_button.color = Config.BLACK
+            self.difficulty_medium_button.color = Config.BLACK
+            self.difficulty_hard_button.color = Config.BLUE
 
         self.difficulty_easy_button.draw(self.SCREEN)
         self.difficulty_medium_button.draw(self.SCREEN)
         self.difficulty_hard_button.draw(self.SCREEN)
         self.gamemode_chess_button.draw(self.SCREEN)
         self.gamemode_checkers_button.draw(self.SCREEN)
-        for row in range(ROWS):
-            for col in range(COLUMNS):
-                if row > 0:
-                    x = PADDING_TABLE_WIDTH + MARGIN + col * (CELL_WIDTH + MARGIN)
-                    y = PADDING_TABLE_HEIGHT + MARGIN + row * (CELL_HEIGHT + MARGIN)
+        self.menu_button.draw(self.SCREEN)
 
-                    pygame.draw.rect(self.SCREEN, Config.GRAY, (x, y, CELL_WIDTH, CELL_HEIGHT))
+        for row in range(self.ROWS - 1):
+            for col in range(self.COLUMNS):
+                if row > 0:
+                    x = self.PADDING_TABLE_WIDTH + self.MARGIN + col * (self.CELL_WIDTH + self.MARGIN)
+                    y = self.PADDING_TABLE_HEIGHT + self.MARGIN + row * (self.CELL_HEIGHT + self.MARGIN)
+
+                    pygame.draw.rect(self.SCREEN, Config.GRAY, (x, y, self.CELL_WIDTH, self.CELL_HEIGHT))
 
                     text_surface = font.render(table_data[row][col], True, Config.BLACK)
-                    text_rect = text_surface.get_rect(center=(x + CELL_WIDTH // 2, y + CELL_HEIGHT // 2))
+                    text_rect = text_surface.get_rect(center=(x + self.CELL_WIDTH // 2, y + self.CELL_HEIGHT // 2))
                     self.SCREEN.blit(text_surface, text_rect)
 
     def handle_event(self, event: Event):
         if self.difficulty_easy_button.is_clicked(event):
-            self.difficulty_easy_button.color = Config.BLUE
-            print("test")
+            self.level_type = LevelType.EASY
+        if self.difficulty_medium_button.is_clicked(event):
+            self.level_type = LevelType.MEDIUM
+        if self.difficulty_hard_button.is_clicked(event):
+            self.level_type = LevelType.HARD
+        if self.gamemode_checkers_button.is_clicked(event):
+            self.game_type = GameType.CHECKERS_GAME
+        if self.gamemode_chess_button.is_clicked(event):
+            self.game_type = GameType.CHESS_GAME
+        if self.menu_button.is_clicked(event):
+            self.set_as_current_page_by_page_name("menu")
+
 
     def exit_event(self):
         pass
+
+
