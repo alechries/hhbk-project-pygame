@@ -39,3 +39,32 @@ class ChessBoardPage(BaseBoardPage):
 
     def handle_event(self, event: Event):
         super().handle_event(event)
+
+    def minimax(self, position, depth: int, alpha: int, beta:int, max_player:bool, game, ):
+        if depth == 0 or not self.check_winner() :
+            return None, position
+
+        if max_player:
+            max_eval = -math.inf
+            best_move = None
+            for move in get_all_moves(position, WHITE, game):
+                evaluation = minimax(move, depth - 1, alpha, beta, False, game)[0]
+                max_eval = max(max_eval, evaluation)
+                alpha = max(alpha, evaluation)
+                if beta <= alpha:
+                    break
+                if max_eval == evaluation:
+                    best_move = move
+            return max_eval, best_move
+        else:
+            min_eval = math.inf
+            best_move = None
+            for move in get_all_moves(position, RED, game):
+                evaluation = minimax(move, depth - 1, alpha, beta, True, game)[0]
+                min_eval = min(min_eval, evaluation)
+                beta = min(beta, evaluation)
+                if beta <= alpha:
+                    break
+                if min_eval == evaluation:
+                    best_move = move
+            return min_eval, best_move
