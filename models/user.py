@@ -34,10 +34,14 @@ class UserModel(BaseModel):
         """
         self.execute_query(create_table_query)
 
-        for name in ['Alex', 'Tom', 'Erka', 'Rober', 'Enruqie', 'NhatHuy']:
-            u = UserModel()
-            u.add_user(username=f'{name.lower()}{randint(100, 20000)}', password=f'abc{randint(100, 10000)}')
-            # TODO INCREMENT
+#        for name in ['Alex', 'Tom', 'Erka', 'Rober', 'Enruqie', 'NhatHuy']:
+#            u = UserModel()
+#            password = f'abc{randint(100, 10000)}'
+#            username = f'{name.lower()}{randint(100, 20000)}'
+#            u.add_user(username, password)
+#            u.login(username, password)
+#            for i in range(randint(1, 20)):
+#                u.increment_chess_wins_easy()
 
     def get_fields(self) -> list:
         return ['id', 'username', 'password', 'games_played', 'best_result_checkers', 'best_result_chess',
@@ -64,6 +68,10 @@ class UserModel(BaseModel):
     def get_user(self, username: str):
         get_user_query = "SELECT * FROM users WHERE username = ?;"
         return self.fetch_query(get_user_query, (username,))
+
+    def get_data(self):
+        get_data_query = "SELECT * FROM users;"
+        return self.fetch_query(get_data_query)
 
     def update_games_played(self, username: str, games_played: int):
         update_query = "UPDATE users SET games_played = ? WHERE username = ?;"
@@ -125,7 +133,10 @@ class UserModel(BaseModel):
     def chess_wins_easy(self, value: int):
         if self.logged_in and self._username:
             update_query = "UPDATE users SET chess_wins_easy = ? WHERE username = ?;"
-            self.execute_query(update_query, (value+1, self._username))
+            self.execute_query(update_query, (value, self._username))
+
+    def increment_chess_wins_easy(self):
+        self.chess_wins_easy += 1
 
     @property
     def chess_wins_medium(self):
@@ -138,7 +149,10 @@ class UserModel(BaseModel):
     def chess_wins_medium(self, value: int):
         if self.logged_in and self._username:
             update_query = "UPDATE users SET chess_wins_medium = ? WHERE username = ?;"
-            self.execute_query(update_query, (value+1, self._username))
+            self.execute_query(update_query, (value, self._username))
+
+    def increment_chess_wins_medium(self):
+        self.chess_wins_medium += 1
 
     @property
     def chess_wins_hard(self):
@@ -151,7 +165,10 @@ class UserModel(BaseModel):
     def chess_wins_hard(self, value: int):
         if self.logged_in and self._username:
             update_query = "UPDATE users SET chess_wins_hard = ? WHERE username = ?;"
-            self.execute_query(update_query, (value+1, self._username))
+            self.execute_query(update_query, (value, self._username))
+
+    def increment_chess_wins_hard(self):
+        self.chess_wins_hard += 1
 
     @property
     def chess_defeats_easy(self):
@@ -164,7 +181,10 @@ class UserModel(BaseModel):
     def chess_defeats_easy(self, value: int):
         if self.logged_in and self._username:
             update_query = "UPDATE users SET chess_defeats_easy = ? WHERE username = ?;"
-            self.execute_query(update_query, (value+1, self._username))
+            self.execute_query(update_query, (value, self._username))
+
+    def increment_chess_defeats_easy(self):
+        self.chess_defeats_easy += 1
 
     @property
     def chess_defeats_medium(self):
@@ -177,7 +197,10 @@ class UserModel(BaseModel):
     def chess_defeats_medium(self, value: int):
         if self.logged_in and self._username:
             update_query = "UPDATE users SET chess_defeats_medium = ? WHERE username = ?;"
-            self.execute_query(update_query, (value+1, self._username))
+            self.execute_query(update_query, (value, self._username))
+
+    def increment_chess_defeats_medium(self):
+        self.chess_defeats_medium += 1
 
     @property
     def chess_defeats_hard(self):
@@ -190,7 +213,10 @@ class UserModel(BaseModel):
     def chess_defeats_hard(self, value: int):
         if self.logged_in and self._username:
             update_query = "UPDATE users SET chess_defeats_hard = ? WHERE username = ?;"
-            self.execute_query(update_query, (value+1, self._username))
+            self.execute_query(update_query, (value, self._username))
+
+    def increment_chess_defeats_hard(self):
+        self.chess_defeats_hard += 1
 
     @property
     def checkers_wins_easy(self):
@@ -203,7 +229,10 @@ class UserModel(BaseModel):
     def checkers_wins_easy(self, value: int):
         if self.logged_in and self._username:
             update_query = "UPDATE users SET checkers_wins_easy = ? WHERE username = ?;"
-            self.execute_query(update_query, (value+1, self._username))
+            self.execute_query(update_query, (value, self._username))
+
+    def increment_checkers_wins_easy(self):
+        self.checkers_wins_easy += 1
 
     @property
     def checkers_wins_medium(self):
@@ -216,7 +245,10 @@ class UserModel(BaseModel):
     def checkers_wins_medium(self, value: int):
         if self.logged_in and self._username:
             update_query = "UPDATE users SET checkers_wins_medium = ? WHERE username = ?;"
-            self.execute_query(update_query, (value+1, self._username))
+            self.execute_query(update_query, (value, self._username))
+
+    def increment_checkers_wins_medium(self):
+        self.checkers_wins_medium += 1
 
     @property
     def checkers_wins_hard(self):
@@ -229,7 +261,10 @@ class UserModel(BaseModel):
     def checkers_wins_hard(self, value: int):
         if self.logged_in and self._username:
             update_query = "UPDATE users SET checkers_wins_hard = ? WHERE username = ?;"
-            self.execute_query(update_query, (value+1, self._username))
+            self.execute_query(update_query, (value, self._username))
+
+    def increment_checkers_wins_hard(self):
+        self.checkers_wins_hard += 1
 
     @property
     def checkers_defeats_easy(self):
@@ -242,7 +277,10 @@ class UserModel(BaseModel):
     def checkers_defeats_easy(self, value: int):
         if self.logged_in and self._username:
             update_query = "UPDATE users SET checkers_defeats_easy = ? WHERE username = ?;"
-            self.execute_query(update_query, (value+1, self._username))
+            self.execute_query(update_query, (value, self._username))
+
+    def increment_checkers_defeats_easy(self):
+        self.checkers_defeats_easy += 1
 
     @property
     def checkers_defeats_medium(self):
@@ -255,7 +293,10 @@ class UserModel(BaseModel):
     def checkers_defeats_medium(self, value: int):
         if self.logged_in and self._username:
             update_query = "UPDATE users SET checkers_defeats_medium = ? WHERE username = ?;"
-            self.execute_query(update_query, (value+1, self._username))
+            self.execute_query(update_query, (value, self._username))
+
+    def increment_checkers_defeats_medium(self):
+        self.checkers_defeats_medium += 1
 
     @property
     def checkers_defeats_hard(self):
@@ -268,7 +309,10 @@ class UserModel(BaseModel):
     def checkers_defeats_hard(self, value: int):
         if self.logged_in and self._username:
             update_query = "UPDATE users SET checkers_defeats_hard = ? WHERE username = ?;"
-            self.execute_query(update_query, (value+1, self._username))
+            self.execute_query(update_query, (value, self._username))
+
+    def increment_checkers_defeats_hard(self):
+        self.checkers_defeats_hard += 1
 
     @property
     def logged_in(self):

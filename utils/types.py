@@ -12,7 +12,7 @@ class TeamType(IntEnum):
 
 class GameType(IntEnum):
 
-    UNKNOWN = 1
+    UNKNOWN = 0
     CHESS_GAME = 1
     CHECKERS_GAME = 2
     TICTACTOE_GAME = 3
