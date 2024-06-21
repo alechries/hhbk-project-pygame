@@ -197,7 +197,7 @@ class BaseBoardPage(BasePage):
     def inactive_pieces(self) -> typing.List[Piece]:
         return self.white_team_pieces_storage + self.black_team_pieces_storage
 
-    def minmax_move(self, pieces_with_moves: typing.List[typing.Tuple[Piece, typing.List[Cell]]]) -> Cell:
+    def make_move(self, pieces_with_moves: typing.List[typing.Tuple[Piece, typing.List[Cell]]]) -> Cell:
         pass
 
     @property
@@ -234,6 +234,20 @@ class BaseBoardPage(BasePage):
     def current_step_direction(self):
         direction_team = -1 if self.current_step == TeamType.WHITE_TEAM else 1
         return direction_team
+
+    @staticmethod
+    def get_current_step_direction_by_team(team: TeamType):
+        direction_team = -1 if team == TeamType.WHITE_TEAM else 1
+        return direction_team
+
+    @staticmethod
+    def reverse_team(team: TeamType):
+        if team == TeamType.WHITE_TEAM:
+            return TeamType.BLACK_TEAM
+        elif team == TeamType.BLACK_TEAM:
+            return TeamType.WHITE_TEAM
+        else:
+            return TeamType.UNKNOWN_TEAM
 
     @property
     def selected_piece(self) -> Piece:

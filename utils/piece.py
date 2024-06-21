@@ -19,6 +19,8 @@ class Piece:
         self.height = height
         self.board_place_row = board_place_row
         self.board_place_column = board_place_column
+        self.minmax_place_row = 0
+        self.minmax_place_column = 0
 
         self.game_type = game_type if game_type else choice([GameType.CHESS_GAME, GameType.CHECKERS_GAME])
         self.team_type = team_type if team_type else TeamType.WHITE_TEAM
