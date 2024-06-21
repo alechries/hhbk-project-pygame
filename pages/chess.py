@@ -86,9 +86,7 @@ class ChessBoardPage(BaseBoardPage):
         all_moves = []
 
         for current_team_piece in current_team_pieces:
-            for move in self.get_moves_by_board_placement(current_team_piece.minmax_place_column,
-                                                          current_team_piece.minmax_place_row,
-                                                          current_team_piece.team_type):
+            for move in self.get_moves_by_board_placement(current_team_piece.minmax_place_column, current_team_piece.minmax_place_row, current_team_piece.team_type):
                 cell = current_map[move.board_row][move.board_column]
                 if cell is not None:
                     if cell.team_type == current_team:
