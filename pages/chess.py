@@ -6,7 +6,7 @@ from pygame.event import Event
 from random import choice
 import pygame
 from utils.piece import Piece
-from utils.types import GameType, SpawnType, TeamType, BoardCellType, LevelType
+from utils.types import GameType, LevelType
 
 
 class ChessBoardPage(BaseBoardPage):
@@ -36,6 +36,3 @@ class ChessBoardPage(BaseBoardPage):
             move = choice(moves)
             return move
         # current_map_enemy = self.get_current_map_with_pieces(self.get_current_map_with_pieces(BoardCellType.ENEMY_CELL))
-
-    def handle_event(self, event: Event):
-        super().handle_event(event)
