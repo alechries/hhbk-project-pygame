@@ -1,23 +1,41 @@
+import typing
+
 from utils.board import BaseBoardPage
-from utils.page import BasePage
+from utils.cell import Cell
 from pygame.event import Event
+from random import choice
+import pygame
+from utils.piece import Piece
+from utils.types import GameType, SpawnType, TeamType, BoardCellType, LevelType
 
 
 class ChessBoardPage(BaseBoardPage):
 
     def __init__(self):
-        super().__init__()
+        super().__init__(GameType.CHESS_GAME)
         self.page_name = 'chess'
 
-    def draw(self):
-        super().draw()
+    def get_moves(self, selected_piece: Piece) -> typing.List[Cell]:
 
-        text = self.DEFAULT_FONT.render('"Bauernschach" page', True, self.thema.text)
-        text_rect = text.get_rect(center=(self.SCREEN.get_width() // 2, self.SCREEN.get_height() // 2))
-        self.SCREEN.blit(text, text_rect)
+        direction = self.current_step_direction
+        return self.get_valid_moves_inside(
+            [
+                (selected_piece.board_place_column - 1, selected_piece.board_place_row + direction),
+                (selected_piece.board_place_column + 1, selected_piece.board_place_row + direction),
+            ]
+        )
+
+    def minmax_move(self, pieces_with_moves: typing.List[typing.Tuple[Piece, typing.List[Cell]]]) -> Cell:
+
+        if self.config.game_difficulty_level == LevelType.EASY:
+            self.selected_piece, moves = choice(pieces_with_moves)
+            move = choice(moves)
+            return move
+        else:
+            self.selected_piece, moves = choice(pieces_with_moves)
+            move = choice(moves)
+            return move
+        # current_map_enemy = self.get_current_map_with_pieces(self.get_current_map_with_pieces(BoardCellType.ENEMY_CELL))
 
     def handle_event(self, event: Event):
-        pass
-
-    def exit_event(self):
-        pass
+        super().handle_event(event)

@@ -1,7 +1,10 @@
-
 import pygame
 import sys
+import inspect
+import importlib
+from pathlib import Path
 
+from utils.board import BaseBoardPage
 from utils.config import Config
 from utils.model import BaseModel
 from utils.page import BasePage
@@ -9,11 +12,30 @@ from utils.page import BasePage
 pygame.init()
 
 
+def pages_initialize():
+
+    models_path = Path(__file__).parent / "pages"
+
+    for file in models_path.glob("*.py"):
+        if file.name == "__init__.py":
+            continue
+
+        module_name = f"pages.{file.stem}"
+        module = importlib.import_module(module_name)
+
+        for name, obj in inspect.getmembers(module, inspect.isclass):
+
+            if issubclass(obj, BasePage) and obj is not BasePage and obj is not BaseBoardPage:
+                instance = obj()
+                if instance.page_name:
+                    BasePage.PAGES[instance.page_name] = instance
+
+
 def start_app():
     config = Config()
 
     BaseModel.initialize_tables()
-    BasePage.initialize_pages()
+    pages_initialize()
 
     pygame.display.set_caption(config.app_name)
     BasePage.set_as_current_page_by_page_name(config.start_page)
@@ -46,4 +68,3 @@ def start_app():
 if __name__ == "__main__":
 
     start_app()
-
