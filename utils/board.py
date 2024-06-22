@@ -517,7 +517,7 @@ class BaseBoardPage(BasePage):
                 for piece in self.black_team_pieces:
                     moves = self.get_moves(piece.board_place_column, piece.board_place_row, piece.team_type, self.get_current_map_with_pieces(BoardCellType.ALL_CELL))
                     if len(moves) > 0:
-                        cells = [choice(moves),]
+                        cells.append(choice(moves))
 
             for cell in cells:
                 move: Cell = cell
