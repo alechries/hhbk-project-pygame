@@ -38,7 +38,7 @@ class ChessBoardPage(BaseBoardPage):
             (piece_column - 1, piece_row + direction),
             (piece_column + 1, piece_row + direction),
         ]:
-            if move_column < 0 or move_column >= self.num_blocks_horizontal or move_row < 0 or move_column >= self.num_blocks_vertical:
+            if move_column < 0 or move_column >= self.num_blocks_horizontal or move_row < 0 or move_row >= self.num_blocks_vertical:
                 continue
 
             piece_on_move_cell: Piece = current_map[move_row][move_column]
@@ -51,6 +51,8 @@ class ChessBoardPage(BaseBoardPage):
                     continue
                 elif piece_on_move_cell.team_type == enemy_team_type:
                     move.destroy_figures.append(piece_on_move_cell)
-
+            if only_with_destroyed_pieces:
+                if len(move.destroy_figures) == 0:
+                    continue
             moves.append(move)
         return moves
