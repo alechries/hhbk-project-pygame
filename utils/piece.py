@@ -44,7 +44,7 @@ class Piece:
         created_pieces: typing.List[Piece] = []
 
         if game_type == GameType.CHECKERS_GAME:
-            spawn_row = 0 if spawn_type == SpawnType.TOP_SPAWN else board_rows - 1
+            spawn_row = 0 if spawn_type == SpawnType.TOP_SPAWN else board_rows - 2
 
             for i_column in range(board_columns):
                 i_row = spawn_row if i_column % 2 != 0 else spawn_row + 1
