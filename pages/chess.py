@@ -1,6 +1,6 @@
 import copy
 import typing
-
+import math
 from utils.board import BaseBoardPage
 from utils.cell import Cell
 from pygame.event import Event
@@ -8,7 +8,6 @@ from random import choice
 import pygame
 from utils.piece import Piece
 from utils.types import GameType, SpawnType, TeamType, BoardCellType, LevelType
-import math
 
 
 class ChessBoardPage(BaseBoardPage):
@@ -44,7 +43,8 @@ class ChessBoardPage(BaseBoardPage):
 
         if self.config.game_difficulty_level == LevelType.EASY:
             minimax_result = self.minimax(
-                current_map=self.get_current_map_with_pieces(self.get_current_map_with_pieces(BoardCellType.ENEMY_CELL)),
+                current_map=self.get_current_map_with_pieces(
+                    self.get_current_map_with_pieces(BoardCellType.ENEMY_CELL)),
                 main_team=self.current_step,
                 current_team=self.current_step,
                 depth=4,
@@ -63,75 +63,39 @@ class ChessBoardPage(BaseBoardPage):
             move = choice(moves)
             return move
 
-    def handle_event(self, event: Event):
-        super().handle_event(event)
+    def get_moves_v2(self, piece_column: int, piece_row: int, team_type: TeamType,
+                     current_map: typing.List[typing.List[Piece]]) -> \
+            typing.List[Cell]:
 
-    def minimax(self, current_map: typing.List[typing.List[Piece]], main_team: TeamType, current_team: TeamType,
-                depth: int, alpha: int, beta: int) -> typing.Tuple[Piece, Cell] or None:
+        if team_type == TeamType.WHITE_TEAM:
+            direction = -1
+            enemy_team_type = TeamType.BLACK_TEAM
+        elif team_type == TeamType.BLACK_TEAM:
+            direction = 1
+            enemy_team_type = TeamType.WHITE_TEAM
+        else:
+            return []
 
-        if depth == 0 or not self.check_winner():
-            return None
+        piece: Piece = current_map[piece_row][piece_column]
+        if piece is None:
+            return []
 
-        # temp_map = self.get_current_map_with_pieces(BoardCellType.EMPTY_CELL)
+        moves: typing.List[Cell] = []
+        for move_column, move_row in [
+            (piece_column - 1, piece_row + direction),
+            (piece_column + 1, piece_row + direction),
+        ]:
+            if move_column < 0 or move_column >= self.num_blocks_horizontal or move_row < 0 or move_column >= self.num_blocks_vertical:
+                continue
 
-        current_team_pieces = []
-        for row in current_map:
-            for piece in row:
-                if piece is None:
+            piece_on_move_cell: Piece = current_map[move_row][move_column]
+            move = Cell(move_row, move_column, self.board_x, self.board_y, self.block_size, self.block_size, piece=piece, destroy_figures=[piece_on_move_cell, ] if piece_on_move_cell is not None else [])
+
+            if piece_on_move_cell is not None:
+                if piece_on_move_cell.team_type == team_type:
                     continue
+                elif piece_on_move_cell.team_type == enemy_team_type:
+                    move.destroy_figures.append(piece_on_move_cell)
 
-                if piece.team_type == current_team:
-                    current_team_pieces.append(piece)
-
-        all_moves = []
-
-        for current_team_piece in current_team_pieces:
-            for move in self.get_moves_by_board_placement(current_team_piece.minmax_place_column, current_team_piece.minmax_place_row, current_team_piece.team_type):
-                cell = current_map[move.board_row][move.board_column]
-                if cell is not None:
-                    if cell.team_type == current_team:
-                        continue
-
-                all_moves.append(
-                    (current_team_piece, move)
-                )
-
-        for piece, move in all_moves:
-            new_board = copy.deepcopy(current_map)
-            new_board[piece.minmax_place_row][piece.minmax_place_column] = None
-            new_piece = copy.deepcopy(piece)
-            new_board[move.board_row][move.board_column] = new_piece
-            new_piece.minmax_place_row = move.board_row
-            new_piece.minmax_place_column = move.board_column
-
-            if main_team == current_team:
-
-                max_eval = -math.inf
-
-                best_move = None
-                
-                evaluation = \
-                    self.minimax(new_board, main_team, self.reverse_team(current_team), depth - 1, alpha, beta)[0]
-                max_eval = max(max_eval, evaluation)
-                alpha = max(alpha, evaluation)
-                if beta <= alpha:
-                    break
-                if max_eval == evaluation:
-                    best_move = move
-
-                return max_eval, best_move, piece, move
-            else:
-
-                min_eval = math.inf
-
-                best_move = None
-                evaluation = \
-                    self.minimax(new_board, main_team, self.reverse_team(current_team), depth - 1, alpha, beta)[0]
-                min_eval = min(min_eval, evaluation)
-                alpha = min(alpha, evaluation)
-                if beta <= alpha:
-                    break
-                if min_eval == evaluation:
-                    best_move = move
-
-                return min_eval, best_move, piece, move
+            moves.append(move)
+        return moves

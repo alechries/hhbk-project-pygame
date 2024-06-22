@@ -51,7 +51,8 @@ def start_app():
             CP.PAGE_COUNTER = current_pages_history_length
             CP: BasePage = BasePage.CURRENT_PAGE
 
-        for event in pygame.event.get():
+        events = pygame.event.get()
+        for event in events:
             if event.type == pygame.QUIT:
                 CP.exit_event()
                 running = False

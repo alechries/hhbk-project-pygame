@@ -35,6 +35,7 @@ class Piece:
     @property
     def y(self):
         return self.board_y + (self.board_place_row * self.height)
+
     @staticmethod
     def generate_pieces(board_x: int, board_y: int,  board_columns: int, board_rows: int, piece_width: int, piece_height: int, game_type: GameType, team_type: TeamType, spawn_type: SpawnType):
 

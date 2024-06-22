@@ -36,6 +36,7 @@ class BoardCellType(IntEnum):
     EMPTY_CELL = 0
     TEAM_CELL = 1
     ENEMY_CELL = 2
+    ALL_CELL = 0
 
 
 class BoardMoveType(IntEnum):
