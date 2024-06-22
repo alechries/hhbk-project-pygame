@@ -13,7 +13,6 @@ pygame.init()
 
 
 def pages_initialize():
-
     models_path = Path(__file__).parent / "pages"
 
     for file in models_path.glob("*.py"):
@@ -67,5 +66,4 @@ def start_app():
 
 
 if __name__ == "__main__":
-
     start_app()
