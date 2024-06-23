@@ -1,3 +1,5 @@
+import os.path
+
 import pygame
 import sys
 import inspect
@@ -8,6 +10,7 @@ from utils.board import BaseBoardPage
 from utils.config import Config
 from utils.model import BaseModel
 from utils.page import BasePage
+from os import path
 
 pygame.init()
 
@@ -36,7 +39,6 @@ def start_app():
     BaseModel.initialize_tables()
     pages_initialize()
 
-    pygame.display.set_caption(config.app_name)
     BasePage.set_as_current_page_by_page_name(config.start_page)
 
     clock = pygame.time.Clock()

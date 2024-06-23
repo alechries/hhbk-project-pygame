@@ -9,8 +9,8 @@ class AuthPage(BasePage):
     def __init__(self, on_auth_success=None):
         super().__init__()
         self.page_name = 'auth'
-        self.sound = SoundManager()
-        self.sound.play('assets/sounds/auth/loaded.mp3')
+        # self.sound = SoundManager()
+        # self.sound.play('assets/sounds/auth/loaded.mp3')
         self.user_model = UserModel()
         self.user_model.initialize_table()
         self.username = ''
@@ -97,5 +97,6 @@ class AuthPage(BasePage):
                 self.on_auth_success()
 
     def exit_event(self):
-        self.sound.play('assets/sounds/auth/app_shutdown.mp3')
+        # self.sound.play('assets/sounds/auth/app_shutdown.mp3')
         sleep(1)
+
