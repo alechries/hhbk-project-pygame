@@ -9,6 +9,7 @@ class BaseTheme:
         self.border = self.config.GRAY
         self.text = self.config.BLACK
         self.button = self.config.GREEN
+        self.button_pressed = self.config.ORANGE_RED
         self.white_team = self.config.WHITE
         self.black_team = self.config.BLACK
         self.table_part_0 = self.config.WHITE
@@ -24,3 +25,4 @@ class BaseTheme:
         self.loser_notification_background = self.config.DARK_RED
         self.button_text = self.config.BLACK
         self.button_background = self.config.WHITE
+        self.scoreboard_cells = self.config.LIGHT_GRAY
