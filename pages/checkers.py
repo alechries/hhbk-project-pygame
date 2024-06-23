@@ -65,7 +65,7 @@ class CheckersBoardPage(BaseBoardPage):
 
             if piece_on_move_cell is not None or destroy_piece is None:
                 continue
-            print(destroy_piece.team_type)
+
             if destroy_piece.team_type != enemy_team_type:
                 continue
 
