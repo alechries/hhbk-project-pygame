@@ -65,14 +65,13 @@ class CheckersBoardPage(BaseBoardPage):
 
             if piece_on_move_cell is not None or destroy_piece is None:
                 continue
-
+            print(destroy_piece.team_type)
             if destroy_piece.team_type != enemy_team_type:
                 continue
 
             move = Cell(
                 move_row, move_column, self.board_x, self.board_y, self.block_size, self.block_size,
-                piece=piece, destroy_figures=[destroy_piece, ] if piece_on_move_cell is not None else [])
+                piece=piece, destroy_figures=[destroy_piece, ])
 
-            move.destroy_figures.append(piece_on_move_cell)
             moves.append(move)
         return moves

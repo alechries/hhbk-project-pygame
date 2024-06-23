@@ -232,7 +232,7 @@ class BaseBoardPage(BasePage):
             )
             all_moves.extend(moves)
 
-        best_move = []
+        best_move = None
         if main_team == current_team:
             max_eval = -math.inf
             for move in all_moves:
@@ -253,7 +253,7 @@ class BaseBoardPage(BasePage):
 
                 if evaluation > max_eval:
                     max_eval = evaluation
-                    best_move = [move, ]
+                    best_move = move
                 alpha = max(alpha, evaluation)
                 if beta <= alpha:
                     break
@@ -277,7 +277,7 @@ class BaseBoardPage(BasePage):
 
                 if evaluation < min_eval:
                     min_eval = evaluation
-                    best_move = [move, ]
+                    best_move = move
                 beta = min(beta, evaluation)
                 if beta <= alpha:
                     break
@@ -492,18 +492,15 @@ class BaseBoardPage(BasePage):
     def make_enemy_move(self):
 
         if self.current_step == TeamType.BLACK_TEAM:
+            depth = 0
 
-            if self.config.game_difficulty_level == LevelType.EASY:
-                depth = 1
-            elif self.config.game_difficulty_level == LevelType.MEDIUM:
+            if self.config.game_difficulty_level == LevelType.MEDIUM:
                 depth = 2
             elif self.config.game_difficulty_level == LevelType.HARD:
-                depth = 4
-            else:
-                depth = 0
+                depth = 5
 
             if depth > 0:
-                _, cells = self.minimax(
+                _, cell = self.minimax(
                     current_map=self.get_current_map_with_pieces(BoardCellType.ALL_CELL),
                     main_team=TeamType.BLACK_TEAM,
                     current_team=TeamType.BLACK_TEAM,
@@ -511,14 +508,34 @@ class BaseBoardPage(BasePage):
                     alpha=0,
                     beta=0
                 )
+                cells = [cell, ]
             else:
+                current_map = self.get_current_map_with_pieces(BoardCellType.ALL_CELL)
+
                 cells = []
                 shuffle(self.black_team_pieces)
                 for piece in self.black_team_pieces:
-                    moves = self.get_moves(piece.board_place_column, piece.board_place_row, piece.team_type, self.get_current_map_with_pieces(BoardCellType.ALL_CELL))
+                    moves = self.get_moves(piece.board_place_column, piece.board_place_row, piece.team_type,
+                                           current_map, only_with_destroyed_pieces=True)
                     if len(moves) > 0:
                         cells.append(choice(moves))
+
+                        while True:
+                            moves = self.get_moves(cells[-1].board_column, cells[-1].board_row, piece.team_type,
+                                                   current_map, only_with_destroyed_pieces=True)
+                            if len(moves) == 0:
+                                break
+                            else:
+                                cells.append(choice(moves))
                         break
+
+                if len(cells) == 0:
+                    for piece in self.black_team_pieces:
+                        moves = self.get_moves(piece.board_place_column, piece.board_place_row, piece.team_type,
+                                               current_map, only_with_destroyed_pieces=False)
+                        if len(moves) > 0:
+                            cells.append(choice(moves))
+                            break
 
             for cell in cells:
                 move: Cell = cell
@@ -527,7 +544,6 @@ class BaseBoardPage(BasePage):
                 self.selected_piece.board_place_row = move.board_row
 
                 for destroy_piece in move.destroy_figures:
-
                     self.enemy_pieces_by_current_teams_step.remove(destroy_piece)
 
                     destroy_piece.board_x = self.storage_left_x
