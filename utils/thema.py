@@ -20,7 +20,7 @@ class BaseTheme:
         self.winner_glow = self.config.GREEN_TRANSPARENT
         self.winner_notification_text = self.config.BLACK
         self.winner_notification_background = self.config.DARK_GREEN
-        self.loser_glow = self.config.RED
+        self.loser_glow = self.config.RED_TRANSPARENT
         self.loser_notification_text = self.config.WHITE
         self.loser_notification_background = self.config.DARK_RED
         self.button_text = self.config.BLACK

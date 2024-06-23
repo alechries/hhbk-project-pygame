@@ -41,7 +41,7 @@ class BaseBoardPage(BasePage):
         self.smaller_num_blocks = self.num_blocks_vertical if self.num_blocks_vertical < self.num_blocks_horizontal else self.num_blocks_horizontal
 
         self.block_size = (self.smaller_side_size / 100 * self.config.board_size_percent) / self.smaller_num_blocks
-        self.piece_size = self.block_size * 0.8
+        self.piece_size = self.block_size
 
         self.board_x = (self.SCREEN.get_width() - (self.num_blocks_horizontal * self.block_size)) // 2
         self.board_y = (self.SCREEN.get_height() - (self.num_blocks_vertical * self.block_size)) // 2
@@ -56,14 +56,9 @@ class BaseBoardPage(BasePage):
         self.storage_right_width = self.block_size
         self.storage_right_height = self.storage_left_height
 
-        self.white_team_pieces = Piece.generate_pieces(
-            self.board_x, self.board_y, self.num_blocks_horizontal, self.num_blocks_vertical,
-            self.block_size, self.block_size, self.game_type, TeamType.WHITE_TEAM, SpawnType.BOTTOM_SPAWN
-        )
+        self.white_team_pieces = self.generate_pieces(TeamType.WHITE_TEAM, SpawnType.BOTTOM_SPAWN)
         self.white_team_pieces_storage: typing.List[Piece] = []
-        self.black_team_pieces = Piece.generate_pieces(
-            self.board_x, self.board_y, self.num_blocks_horizontal, self.num_blocks_vertical,
-            self.block_size, self.block_size, self.game_type, TeamType.BLACK_TEAM, SpawnType.TOP_SPAWN)
+        self.black_team_pieces = self.generate_pieces(TeamType.BLACK_TEAM, SpawnType.TOP_SPAWN)
         self.black_team_pieces_storage: typing.List[Piece] = []
 
         self.winner_overlay = pygame.Surface((self.SCREEN.get_width(), self.SCREEN.get_height()), pygame.SRCALPHA)
@@ -139,6 +134,7 @@ class BaseBoardPage(BasePage):
         # STORAGE PIECES
 
         black_team_pieces_storage_length = len(self.black_team_pieces_storage)
+
         if black_team_pieces_storage_length > 0:
             pygame.draw.rect(self.SCREEN, self.config.GRAY,
                              [self.storage_left_x, self.storage_left_y, self.storage_left_width,
@@ -299,8 +295,6 @@ class BaseBoardPage(BasePage):
             pygame.time.set_timer(EventType.ENEMY_MOVE_EVENT, 0)
 
             self.make_enemy_move()
-            self.selected_piece = None
-            self.change_step_side()
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
 
@@ -317,7 +311,7 @@ class BaseBoardPage(BasePage):
                             self.selected_piece.board_place_column = move.board_column
                             self.selected_piece.board_place_row = move.board_row
 
-                            skip_next_team_change = move.skip_next_team_change
+                            skip_next_team_change = False
                             for destroy_piece in move.destroy_figures:
 
                                 destroy_piece.board_x = self.storage_left_x
@@ -329,20 +323,22 @@ class BaseBoardPage(BasePage):
                                     self.enemy_pieces_storage_by_current_teams_step.append(destroy_piece)
                                     self.enemy_pieces_by_current_teams_step.remove(destroy_piece)
 
-                                if not move.skip_next_team_change:
-                                    moves = self.get_moves(
-                                        piece_column=self.selected_piece.board_place_column,
-                                        piece_row=self.selected_piece.board_place_row,
-                                        team_type=self.selected_piece.team_type,
-                                        current_map=self.get_current_map_with_pieces(BoardCellType.ALL_CELL),
-                                        only_with_destroyed_pieces=True
-                                    )
-                                    self.__current_moves = moves
-                                    if len(moves) == 0:
-                                        skip_next_team_change = False
+                            if len(move.destroy_figures) > 0 and move.skip_next_team_change:
+                                moves = self.get_moves(
+                                    piece_column=self.selected_piece.board_place_column,
+                                    piece_row=self.selected_piece.board_place_row,
+                                    team_type=self.selected_piece.team_type,
+                                    current_map=self.get_current_map_with_pieces(BoardCellType.ALL_CELL),
+                                    only_with_destroyed_pieces=True
+                                )
+
+                                self.__current_moves = moves
+                                if len(moves) > 0:
+                                    skip_next_team_change = True
+
+                            self.selected_piece = None
 
                             if not skip_next_team_change:
-                                self.selected_piece = None
                                 self.change_step_side()
 
                             pygame.time.set_timer(EventType.ENEMY_MOVE_EVENT, 1000)
@@ -378,9 +374,6 @@ class BaseBoardPage(BasePage):
     @property
     def inactive_pieces(self) -> typing.List[Piece]:
         return self.white_team_pieces_storage + self.black_team_pieces_storage
-
-    def make_move(self, pieces_with_moves: typing.List[typing.Tuple[Piece, typing.List[Cell]]]) -> Cell:
-        pass
 
     @property
     def pieces_by_current_teams_step(self) -> typing.List[Piece]:
@@ -449,14 +442,9 @@ class BaseBoardPage(BasePage):
         self.__selected_piece = None
         self.__current_moves = []
 
-        self.white_team_pieces = Piece.generate_pieces(
-            self.board_x, self.board_y, self.num_blocks_horizontal, self.num_blocks_vertical,
-            self.block_size, self.block_size, self.game_type, TeamType.WHITE_TEAM, SpawnType.BOTTOM_SPAWN
-        )
+        self.white_team_pieces = self.generate_pieces(TeamType.WHITE_TEAM, SpawnType.BOTTOM_SPAWN)
         self.white_team_pieces_storage: typing.List[Piece] = []
-        self.black_team_pieces = Piece.generate_pieces(
-            self.board_x, self.board_y, self.num_blocks_horizontal, self.num_blocks_vertical,
-            self.block_size, self.block_size, self.game_type, TeamType.BLACK_TEAM, SpawnType.TOP_SPAWN)
+        self.black_team_pieces = self.generate_pieces(TeamType.BLACK_TEAM, SpawnType.TOP_SPAWN)
         self.black_team_pieces_storage: typing.List[Piece] = []
 
         self.current_step = TeamType.WHITE_TEAM
@@ -475,6 +463,9 @@ class BaseBoardPage(BasePage):
             )
         else:
             self.__current_moves = []
+
+    def generate_pieces(self, team_type: TeamType, spawn_type: SpawnType) -> typing.List[Piece]:
+        raise NotImplementedError
 
     def check_winner(self):
 
@@ -519,15 +510,6 @@ class BaseBoardPage(BasePage):
                     moves = self.get_moves(piece.board_place_column, piece.board_place_row, piece.team_type,
                                            current_map, only_with_destroyed_pieces=True)
                     if len(moves) > 0:
-                        cells.append(choice(moves))
-
-                        while True:
-                            moves = self.get_moves(cells[-1].board_column, cells[-1].board_row, piece.team_type,
-                                                   current_map, only_with_destroyed_pieces=True)
-                            if len(moves) == 0:
-                                break
-                            else:
-                                cells.append(choice(moves))
                         break
 
                 if len(cells) == 0:
@@ -557,6 +539,24 @@ class BaseBoardPage(BasePage):
                 destroy_piece.board_place_column = 0
 
                 self.white_team_pieces_storage.append(destroy_piece)
+
+            skip_next_team_change = False
+            if len(move.destroy_figures) > 0 and move.skip_next_team_change:
+                moves = self.get_moves(
+                    piece_column=self.selected_piece.board_place_column,
+                    piece_row=self.selected_piece.board_place_row,
+                    team_type=self.selected_piece.team_type,
+                    current_map=self.get_current_map_with_pieces(BoardCellType.ALL_CELL),
+                    only_with_destroyed_pieces=True
+                )
+                self.__current_moves = moves
+                if len(moves) > 0:
+                    skip_next_team_change = True
+                    pygame.time.set_timer(EventType.ENEMY_MOVE_EVENT, 1000)
+
+            self.selected_piece = None
+            if not skip_next_team_change:
+                self.change_step_side()
 
     def exit_event(self):
         pass
