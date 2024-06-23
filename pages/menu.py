@@ -14,7 +14,7 @@ class MenuPage(BasePage):
         self.chess_game_button = Button(300, 240, 200, 30, "Chess", self.thema.text, background=self.thema.background)
         self.checkers_game_button = Button(300, 280, 200, 30, "Checkers", self.thema.text, background=self.thema.background)
         self.buttons: typing.List[Button] = [
-             self.chess_game_button, self.checkers_game_button
+            self.chess_game_button, self.checkers_game_button
         ]
 
     def draw(self):
