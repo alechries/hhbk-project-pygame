@@ -325,9 +325,8 @@ class BaseBoardPage(BasePage):
                                 destroy_piece.board_place_row = len(self.enemy_pieces_storage_by_current_teams_step)
                                 destroy_piece.board_place_column = 0
 
-                                self.enemy_pieces_storage_by_current_teams_step.append(destroy_piece)
-
                                 if destroy_piece in self.enemy_pieces_by_current_teams_step:
+                                    self.enemy_pieces_storage_by_current_teams_step.append(destroy_piece)
                                     self.enemy_pieces_by_current_teams_step.remove(destroy_piece)
 
                                 if not move.skip_next_team_change:
