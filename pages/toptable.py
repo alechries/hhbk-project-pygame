@@ -42,8 +42,6 @@ class TopTablePage(BasePage):
             user.init_by_data(user_data)
             self.user_list.append(user)
 
-
-
     def draw(self):
         super().draw()
 
@@ -95,26 +93,25 @@ class TopTablePage(BasePage):
                     table_data_index += 1
                     scoreboard_position += 1
 
-        self.SCREEN.fill(Config.WHITE)
         if self.game_type == GameType.CHESS_GAME:
-            self.gamemode_chess_button.color = Config.BLUE
-            self.gamemode_checkers_button.color = Config.BLACK
+            self.gamemode_chess_button.color = self.thema.button_pressed
+            self.gamemode_checkers_button.color = self.thema.text
         elif self.game_type == GameType.CHECKERS_GAME:
-            self.gamemode_chess_button.color = Config.BLACK
-            self.gamemode_checkers_button.color = Config.BLUE
+            self.gamemode_chess_button.color = self.thema.text
+            self.gamemode_checkers_button.color = self.thema.button_pressed
 
         if self.level_type == LevelType.EASY:
-            self.difficulty_easy_button.color = Config.BLUE
-            self.difficulty_medium_button.color = Config.BLACK
-            self.difficulty_hard_button.color = Config.BLACK
+            self.difficulty_easy_button.color = self.thema.button_pressed
+            self.difficulty_medium_button.color = self.thema.text
+            self.difficulty_hard_button.color = self.thema.text
         elif self.level_type == LevelType.MEDIUM:
-            self.difficulty_easy_button.color = Config.BLACK
-            self.difficulty_medium_button.color = Config.BLUE
-            self.difficulty_hard_button.color = Config.BLACK
+            self.difficulty_easy_button.color = self.thema.text
+            self.difficulty_medium_button.color = self.thema.button_pressed
+            self.difficulty_hard_button.color = self.thema.text
         elif self.level_type == LevelType.HARD:
-            self.difficulty_easy_button.color = Config.BLACK
-            self.difficulty_medium_button.color = Config.BLACK
-            self.difficulty_hard_button.color = Config.BLUE
+            self.difficulty_easy_button.color = self.thema.text
+            self.difficulty_medium_button.color = self.thema.text
+            self.difficulty_hard_button.color = self.thema.button_pressed
 
         self.difficulty_easy_button.draw(self.SCREEN)
         self.difficulty_medium_button.draw(self.SCREEN)
@@ -129,9 +126,11 @@ class TopTablePage(BasePage):
                     x = self.PADDING_TABLE_WIDTH + self.MARGIN + col * (self.CELL_WIDTH + self.MARGIN)
                     y = self.PADDING_TABLE_HEIGHT + self.MARGIN + row * (self.CELL_HEIGHT + self.MARGIN)
 
-                    pygame.draw.rect(self.SCREEN, Config.GRAY, (x, y, self.CELL_WIDTH, self.CELL_HEIGHT))
+                    pygame.draw.rect(self.SCREEN, self.thema.text, (x, y, self.CELL_WIDTH, self.CELL_HEIGHT), border_radius=3)
+                    pygame.draw.rect(self.SCREEN, self.thema.scoreboard_cells,
+                                     (x + 2, y + 2, self.CELL_WIDTH - 4, self.CELL_HEIGHT - 4), border_radius=3)
 
-                    text_surface = font.render(table_data[row][col], True, Config.BLACK)
+                    text_surface = font.render(table_data[row][col], True, self.thema.text)
                     text_rect = text_surface.get_rect(center=(x + self.CELL_WIDTH // 2, y + self.CELL_HEIGHT // 2))
                     self.SCREEN.blit(text_surface, text_rect)
 
