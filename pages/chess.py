@@ -34,6 +34,23 @@ class ChessBoardPage(BaseBoardPage):
             return []
 
         moves: typing.List[Cell] = []
+
+        for move_column, move_row in [
+            (piece_column, piece_row + direction),
+        ]:
+            if move_column < 0 or move_column >= self.num_blocks_horizontal or move_row < 0 or move_row >= self.num_blocks_vertical:
+                continue
+
+            piece_on_move_cell: Piece = current_map[move_row][move_column]
+            move = Cell(
+                move_row, move_column, self.board_x, self.board_y, self.block_size, self.block_size,
+                piece=piece, destroy_figures=[piece_on_move_cell, ] if piece_on_move_cell is not None else [])
+
+            if piece_on_move_cell is not None:
+                continue
+
+            moves.append(move)
+
         for move_column, move_row in [
             (piece_column - 1, piece_row + direction),
             (piece_column + 1, piece_row + direction),
@@ -51,8 +68,8 @@ class ChessBoardPage(BaseBoardPage):
                     continue
                 elif piece_on_move_cell.team_type == enemy_team_type:
                     move.destroy_figures.append(piece_on_move_cell)
-            if only_with_destroyed_pieces:
-                if len(move.destroy_figures) == 0:
-                    continue
-            moves.append(move)
+                if only_with_destroyed_pieces:
+                    if len(move.destroy_figures) == 0:
+                        continue
+                moves.append(move)
         return moves

@@ -508,7 +508,6 @@ class BaseBoardPage(BasePage):
                     alpha=0,
                     beta=0
                 )
-                cells = [cell, ]
             else:
                 current_map = self.get_current_map_with_pieces(BoardCellType.ALL_CELL)
 
@@ -537,21 +536,25 @@ class BaseBoardPage(BasePage):
                             cells.append(choice(moves))
                             break
 
-            for cell in cells:
-                move: Cell = cell
-                self.selected_piece = move.piece
-                self.selected_piece.board_place_column = move.board_column
-                self.selected_piece.board_place_row = move.board_row
+                if len(cells) > 0:
+                    cell = cells[-1]
+                else:
+                    return None
 
-                for destroy_piece in move.destroy_figures:
-                    self.enemy_pieces_by_current_teams_step.remove(destroy_piece)
+            move: Cell = cell
+            self.selected_piece = move.piece
+            self.selected_piece.board_place_column = move.board_column
+            self.selected_piece.board_place_row = move.board_row
 
-                    destroy_piece.board_x = self.storage_left_x
-                    destroy_piece.board_y = self.storage_left_y
-                    destroy_piece.board_place_row = len(self.white_team_pieces_storage)
-                    destroy_piece.board_place_column = 0
+            for destroy_piece in move.destroy_figures:
+                self.enemy_pieces_by_current_teams_step.remove(destroy_piece)
 
-                    self.white_team_pieces_storage.append(move.piece)
+                destroy_piece.board_x = self.storage_left_x
+                destroy_piece.board_y = self.storage_left_y
+                destroy_piece.board_place_row = len(self.white_team_pieces_storage)
+                destroy_piece.board_place_column = 0
+
+                self.white_team_pieces_storage.append(move.piece)
 
     def exit_event(self):
         pass
