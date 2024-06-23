@@ -8,6 +8,7 @@ from pygame.event import Event
 from pygame.font import SysFont, Font
 from utils.config import Config
 from utils.thema import BaseTheme
+from models.user import UserModel
 import inspect
 import importlib
 from pathlib import Path
@@ -29,6 +30,7 @@ class BasePage:
 
     def __init__(self, thema=BaseTheme()):
         self.page_name = ''
+        self.current_user = None
         self.thema = thema
         self.config = Config()
         self.DEFAULT_FONT = SysFont('Default font', 20)
@@ -62,6 +64,11 @@ class BasePage:
         if page_name:
             if page_name in BasePage.PAGES.keys():
                 BasePage.PAGES[page_name].set_as_current_page()
+
+    @staticmethod
+    def set_user_global(user: UserModel = None):
+        for page in BasePage.PAGES:
+            page.current_user = user
 
     @staticmethod
     def return_to_last_page():
