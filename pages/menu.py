@@ -53,6 +53,7 @@ class MenuPage(BasePage):
         self.log_out_button = Button(self.SCREEN.get_width() - self.difficulty_button_width - self.buttons_margin,
                                      self.buttons_margin, self.difficulty_button_width, self.button_height, "Logout",
                                      self.thema.text, background=self.thema.logout_button)
+        self.log_out_button.text_surf = self.log_out_button.font.render(self.log_out_button.text, True, self.thema.button_background)
 
         self.scoreboard_button = Button(self.SCREEN.get_width() - (self.difficulty_button_width + self.buttons_margin) *2 - self.difficulty_button_width // 2,
                                         self.buttons_margin, self.difficulty_button_width * 1.5, self.button_height, "Bestenliste",
@@ -91,6 +92,7 @@ class MenuPage(BasePage):
             self.start_game_button.background = self.thema.table_part_1
         else:
             self.start_game_button.background = self.thema.start_game_button
+            self.start_game_button.text_surf = self.start_game_button.font.render(self.start_game_button.text, True, self.thema.button_background)
 
         pygame.draw.rect(self.SCREEN, self.thema.text, (self.button_x - 10, self.chess_game_button.rect.y - 10,
                                                         self.button_width + 20,

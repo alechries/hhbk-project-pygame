@@ -156,24 +156,24 @@ class BaseBoardPage(BasePage):
 
                         if self.current_difficulty_level == LevelType.EASY:
 
-                            if self.game_type == GameType.CHESS_GAME:
-                                user.increment_chess_wins_easy()
+                            if self.game_type == GameType.CHECKERS_GAME:
+                                user.increment_checkers_defeats_easy()
                             elif self.game_type == GameType.CHESS_GAME:
-                                user.increment_chess_wins_easy()
+                                user.increment_chess_defeats_easy()
 
                         elif self.current_difficulty_level == LevelType.MEDIUM:
 
-                            if self.game_type == GameType.CHESS_GAME:
-                                user.increment_chess_wins_medium()
+                            if self.game_type == GameType.CHECKERS_GAME:
+                                user.increment_checkers_defeats_medium()
                             elif self.game_type == GameType.CHESS_GAME:
-                                user.increment_chess_wins_medium()
+                                user.increment_chess_defeats_medium()
 
                         elif self.current_difficulty_level == LevelType.HARD:
 
-                            if self.game_type == GameType.CHESS_GAME:
-                                user.increment_chess_wins_hard()
+                            if self.game_type == GameType.CHECKERS_GAME:
+                                user.increment_checkers_defeats_hard()
                             elif self.game_type == GameType.CHESS_GAME:
-                                user.increment_chess_wins_hard()
+                                user.increment_chess_defeats_hard()
 
             self.won = True
 
@@ -304,13 +304,13 @@ class BaseBoardPage(BasePage):
         if self.won:
             if self.current_step == TeamType.WHITE_TEAM:
                 self.SCREEN.blit(self.winner_overlay, (0, 0))
-                text = self.BIG_FONT.render('SIE SIND GEWINNER :)', True, self.thema.winner_notification_text,
+                text = self.BIG_FONT.render('SIE HABEN GEWONNEN :)', True, self.thema.winner_notification_text,
                                             self.thema.winner_notification_background)
                 text_rect = text.get_rect(center=(self.SCREEN.get_width() // 2, self.SCREEN.get_height() // 3))
                 self.SCREEN.blit(text, text_rect)
             elif self.current_step == TeamType.BLACK_TEAM:
                 self.SCREEN.blit(self.loser_overlay, (0, 0))
-                text = self.BIG_FONT.render('SIE SIND VERLIERER :(', True, self.thema.loser_notification_text,
+                text = self.BIG_FONT.render('SIE HABEN VERLOREN :(', True, self.thema.loser_notification_text,
                                             self.thema.loser_notification_background)
                 text_rect = text.get_rect(center=(self.SCREEN.get_width() // 2, self.SCREEN.get_height() // 3))
                 self.SCREEN.blit(text, text_rect)

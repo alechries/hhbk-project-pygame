@@ -37,7 +37,6 @@ class TopTablePage(BasePage):
         self.menu_button = Button(self.SCREEN.get_width() // 2 - 60, self.SCREEN.get_height() - self.PADDING_TABLE_HEIGHT * 2 + self.MARGIN, 120, 30, "Menü", self.thema.text, background=self.thema.background)
 
 
-
     def draw(self):
         super().draw()
 
