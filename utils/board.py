@@ -153,24 +153,24 @@ class BaseBoardPage(BasePage):
 
                         if self.current_difficulty_level == LevelType.EASY:
 
-                            if self.game_type == GameType.CHESS_GAME:
-                                user.increment_chess_wins_easy()
+                            if self.game_type == GameType.CHECKERS_GAME:
+                                user.increment_checkers_defeats_easy()
                             elif self.game_type == GameType.CHESS_GAME:
-                                user.increment_chess_wins_easy()
+                                user.increment_chess_defeats_easy()
 
                         elif self.current_difficulty_level == LevelType.MEDIUM:
 
-                            if self.game_type == GameType.CHESS_GAME:
-                                user.increment_chess_wins_medium()
+                            if self.game_type == GameType.CHECKERS_GAME:
+                                user.increment_checkers_defeats_medium()
                             elif self.game_type == GameType.CHESS_GAME:
-                                user.increment_chess_wins_medium()
+                                user.increment_chess_defeats_medium()
 
                         elif self.current_difficulty_level == LevelType.HARD:
 
-                            if self.game_type == GameType.CHESS_GAME:
-                                user.increment_chess_wins_hard()
+                            if self.game_type == GameType.CHECKERS_GAME:
+                                user.increment_checkers_defeats_hard()
                             elif self.game_type == GameType.CHESS_GAME:
-                                user.increment_chess_wins_hard()
+                                user.increment_chess_defeats_hard()
 
             self.won = True
 

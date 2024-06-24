@@ -14,7 +14,7 @@ class AuthPage(BasePage):
         # self.sound = SoundManager()
         # self.sound.play('assets/sounds/auth/loaded.mp3')
         self.user_model = UserModel()
-        self.user_model.initialize_table()
+        # self.user_model.initialize_table()
         self.username = ''
         self.password = ''
         self.active_input = 'username'
@@ -105,9 +105,9 @@ class AuthPage(BasePage):
         self.guest_button_rect = pygame.Rect(guest_button_x, button_y, button_width, button_height)
 
         # Draw login button (green background, black border, black text)
-        pygame.draw.rect(self.SCREEN, (0, 255, 0), self.login_button_rect, border_radius=10)
+        pygame.draw.rect(self.SCREEN, self.thema.start_game_button, self.login_button_rect, border_radius=10)
         pygame.draw.rect(self.SCREEN, self.thema.black_team, self.login_button_rect, width=2, border_radius=10)
-        login_text = self.DEFAULT_FONT.render('Einloggen', True, self.thema.black_team)
+        login_text = self.DEFAULT_FONT.render('Einloggen', True, self.thema.button_background)
         login_text_rect = login_text.get_rect(center=self.login_button_rect.center)
         self.SCREEN.blit(login_text, login_text_rect)
 
@@ -205,6 +205,7 @@ class AuthPage(BasePage):
                     pygame.time.set_timer(pygame.USEREVENT, 1000)  # Set timer for 1 second
                 else:
                     self.user_model.add_user(self.username, self.password)
+                    self.user_model.login(self.username, self.password)
                     self.message = f'Benutzer {self.username} erstellt und eingeloggt!'
                     self.show_confirmation = False
                     pygame.time.set_timer(pygame.USEREVENT, 1000)  # Set timer for 1 second
@@ -243,6 +244,7 @@ class AuthPage(BasePage):
         else:
             self.confirmation_message = f'Benutzer existiert nicht. Neues Konto für {self.username} erstellen?'
             self.show_confirmation = True
+
         pygame.display.flip()
 
     def handle_guest_login_attempt(self):
