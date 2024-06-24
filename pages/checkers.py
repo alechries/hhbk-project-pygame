@@ -15,13 +15,13 @@ class CheckersBoardPage(BaseBoardPage):
         super().__init__(GameType.CHECKERS_GAME)
         self.page_name = 'checkers'
         self.guide_message = [
-            'Lorem ipsum dolor sit amet, consetetur sadipscing elitr,',
-            'sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,',
-            'sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.',
-            'Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.',
-            'Lorem ipsum dolor sit amet, consetetur sadipscing elitr,',
-            'sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,',
-            'sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.',
+            'Die Figuren (Spieler = Weiß, Computer = Schwarz)',
+            'können nur diagonal bewegt werden. Falls das hintere diagonale Feld',
+            'Die eigene Figur hat zwei verschiedene Züge.',
+            'von der gegnerischen Figur frei ist, dann kann man diese überspringen',
+            'und die Figur aus dem Spiel nehmen. ',
+            'Ziel des Spiels ist es, alle gegnerischen Figuren zu schlagen',
+            'oder die eigene Figur auf die gegnerische Grundlinie zu platzieren.',
         ]
 
     def get_moves(self, piece_column: int, piece_row: int, team_type: TeamType,
