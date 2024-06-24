@@ -1,6 +1,7 @@
 import typing
 import pygame
 
+from models.user import UserModel
 from utils.config import Config
 from utils.page import BasePage
 from pygame.event import Event
@@ -108,7 +109,7 @@ class MenuPage(BasePage):
         if self.difficulty_hard_button.is_clicked(event):
             self.level_type = LevelType.HARD
             self.config.game_difficulty_level = LevelType.HARD
-        if self.start_game_button.is_clicked(event) & self.level_type != LevelType.UNKNOWN:
+        if self.start_game_button.is_clicked(event) and self.level_type != LevelType.UNKNOWN:
             if self.game_type == GameType.CHESS_GAME:
                 self.load_chess_game()
             elif self.game_type == GameType.CHECKERS_GAME:
@@ -131,4 +132,8 @@ class MenuPage(BasePage):
         print("Hello, Alex!")
 
     def log_out_button_handler(self):
+        if self.current_user is not None:
+            user: UserModel = self.current_user
+            user.logged_in = False
+            self.set_user_global(None)
         self.set_as_current_page_by_page_name('auth')

@@ -339,5 +339,8 @@ class UserModel(BaseModel):
                 update_all_query = "UPDATE users SET logged_in = 0 WHERE logged_in = 1;"
                 self.execute_query(update_all_query)
 
+            if not value:
+                self._username = None
+
             update_query = "UPDATE users SET logged_in = ? WHERE username = ?;"
             self.execute_query(update_query, (1 if value else 0, self._username))
