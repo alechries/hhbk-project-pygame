@@ -10,12 +10,7 @@ import copy
 import typing
 import math
 from pygame.event import Event
-from os import path
-
-from time import sleep
-
 from utils.piece import Piece
-from utils.start_app import start_app
 from utils.types import GameType, TeamType, SpawnType, BoardCellType, EventType, LevelType
 from random import shuffle, choice
 
