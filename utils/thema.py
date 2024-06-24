@@ -31,4 +31,6 @@ class BaseTheme:
         self.button_no = self.config.RED
         self.score_wins = self.config.DARKER_GREEN
         self.score_defeats = self.config.RED
+        self.logout_button = self.config.DARKER_RED
+        self.start_game_button = self.config.FOREST_GREEN
 
