@@ -407,7 +407,6 @@ class BaseBoardPage(BasePage):
 
                             if len(move.destroy_figures) > 0 and move.skip_next_team_change:
                                 moves = self.get_moves(
-                                    self,
                                     piece_column=self.selected_piece.board_place_column,
                                     piece_row=self.selected_piece.board_place_row,
                                     team_type=self.selected_piece.team_type,
