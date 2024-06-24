@@ -430,6 +430,7 @@ class BaseBoardPage(BasePage):
             elif self.toptable_button.is_clicked(event):
                 self.set_as_current_page_by_page_name('toptable')
 
+
         elif event.type == EventType.ENEMY_MOVE_EVENT and self.current_step == TeamType.BLACK_TEAM:
 
             pygame.time.set_timer(EventType.ENEMY_MOVE_EVENT, 0)
