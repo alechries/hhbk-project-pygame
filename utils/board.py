@@ -117,8 +117,7 @@ class BaseBoardPage(BasePage):
             self.help_button,
         )
 
-        button_x = self.board_x + self.board_width - button_width
-        self.guide_close_button = Button(button_x, button_y, button_width, button_height, "Verstanden",
+        self.guide_close_button = Button(self.guide_x + self.guide_width // 2 - button_width // 2, self.guide_y + self.guide_height + 50, button_width, button_height, "Verstanden",
                                          self.thema.button_text, background=self.thema.button_background, )
 
     def change_step_side(self, dont_change_to_next_team=False):
@@ -343,6 +342,8 @@ class BaseBoardPage(BasePage):
                                                               self.guide_y + self.guide_height // 2 - lines_height // 2 + line_height * i))
                 self.SCREEN.blit(guide_text, guide_text_rect)
 
+            self.guide_close_button.draw(self.SCREEN)
+
     def minimax(self, current_map: typing.List[typing.List], main_team: TeamType, current_team: TeamType,
                 depth: int, skip_if_destroyed_figures=False, iteration=0) -> typing.Tuple[int, Cell or None]:
 
@@ -417,7 +418,8 @@ class BaseBoardPage(BasePage):
 
         if self.show_guide:
 
-            pass
+            if self.guide_close_button.is_clicked(event):
+                self.show_guide = False
 
         elif self.won:
 
