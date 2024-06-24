@@ -101,21 +101,21 @@ class AuthPage(BasePage):
             pygame.draw.line(self.SCREEN, self.thema.text, (input_x + caret_pos, password_y + 10), (input_x + caret_pos, password_y + 30))
 
         # Login button
-        login_button_rect = pygame.Rect(login_button_x, button_y, button_width, button_height)
-        guest_button_rect = pygame.Rect(guest_button_x, button_y, button_width, button_height)
+        self.login_button_rect = pygame.Rect(login_button_x, button_y, button_width, button_height)
+        self.guest_button_rect = pygame.Rect(guest_button_x, button_y, button_width, button_height)
 
         # Draw login button (green background, black border, black text)
-        pygame.draw.rect(self.SCREEN, (0, 255, 0), login_button_rect, border_radius=10)
-        pygame.draw.rect(self.SCREEN, self.thema.black_team, login_button_rect, width=2, border_radius=10)
+        pygame.draw.rect(self.SCREEN, (0, 255, 0), self.login_button_rect, border_radius=10)
+        pygame.draw.rect(self.SCREEN, self.thema.black_team, self.login_button_rect, width=2, border_radius=10)
         login_text = self.DEFAULT_FONT.render('Einloggen', True, self.thema.black_team)
-        login_text_rect = login_text.get_rect(center=login_button_rect.center)
+        login_text_rect = login_text.get_rect(center=self.login_button_rect.center)
         self.SCREEN.blit(login_text, login_text_rect)
 
         # Draw guest button (white background, black border, black text)
-        pygame.draw.rect(self.SCREEN, self.thema.white_team, guest_button_rect, border_radius=10)
-        pygame.draw.rect(self.SCREEN, self.thema.black_team, guest_button_rect, width=2, border_radius=10)
+        pygame.draw.rect(self.SCREEN, self.thema.white_team, self.guest_button_rect, border_radius=10)
+        pygame.draw.rect(self.SCREEN, self.thema.black_team, self.guest_button_rect, width=2, border_radius=10)
         guest_text = self.DEFAULT_FONT.render('Als Gast spielen', True, self.thema.black_team)
-        guest_text_rect = guest_text.get_rect(center=guest_button_rect.center)
+        guest_text_rect = guest_text.get_rect(center=self.guest_button_rect.center)
         self.SCREEN.blit(guest_text, guest_text_rect)
 
         # Prompt text
