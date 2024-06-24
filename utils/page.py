@@ -63,7 +63,7 @@ class BasePage:
 
     @staticmethod
     def set_user_global(user: UserModel = None):
-        for page in BasePage.PAGES:
+        for name, page in BasePage.PAGES.items():
             page.current_user = user
 
     @staticmethod
