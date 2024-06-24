@@ -18,7 +18,7 @@ class TopTablePage(BasePage):
         self.ROWS = 13
         self.PADDING_TABLE_PERCENT = 5
         self.PADDING_TABLE_WIDTH = self.SCREEN.get_width() // 100 * self.PADDING_TABLE_PERCENT
-        self.PADDING_TABLE_HEIGHT = self.PADDING_TABLE_WIDTH
+        self.PADDING_TABLE_HEIGHT = self.SCREEN.get_height() // 100 * self.PADDING_TABLE_PERCENT
         self.CELL_WIDTH = (self.SCREEN.get_width() - self.PADDING_TABLE_WIDTH * 2 - (self.COLUMNS - 1) * self.MARGIN) // self.COLUMNS
         self.CELL_HEIGHT = (self.SCREEN.get_height() - self.PADDING_TABLE_HEIGHT * 2 - (self.ROWS - 1) * self.MARGIN) // self.ROWS
         self.user_data_list = UserModel().get_data()
@@ -123,16 +123,40 @@ class TopTablePage(BasePage):
         for row in range(self.ROWS - 1):
             for col in range(self.COLUMNS):
                 if row > 0:
-                    x = self.PADDING_TABLE_WIDTH + self.MARGIN + col * (self.CELL_WIDTH + self.MARGIN)
+                    if col == 1:
+                        x = self.PADDING_TABLE_WIDTH + self.MARGIN + col * (self.CELL_WIDTH // 2 + self.MARGIN)
+                    else:
+                        x = self.PADDING_TABLE_WIDTH + self.MARGIN + col * (self.CELL_WIDTH + self.MARGIN)
+
                     y = self.PADDING_TABLE_HEIGHT + self.MARGIN + row * (self.CELL_HEIGHT + self.MARGIN)
 
-                    pygame.draw.rect(self.SCREEN, self.thema.text, (x, y, self.CELL_WIDTH, self.CELL_HEIGHT), border_radius=3)
-                    pygame.draw.rect(self.SCREEN, self.thema.scoreboard_cells,
-                                     (x + 2, y + 2, self.CELL_WIDTH - 4, self.CELL_HEIGHT - 4), border_radius=3)
+                    if col == 0:
+                        pygame.draw.rect(self.SCREEN, self.thema.text, (x, y, self.CELL_WIDTH // 2, self.CELL_HEIGHT),
+                                         border_radius=3)
+                        pygame.draw.rect(self.SCREEN, self.thema.scoreboard_cells,
+                                         (x + 2, y + 2, (self.CELL_WIDTH - 8) // 2, self.CELL_HEIGHT - 4), border_radius=3)
+                        text_surface = font.render(table_data[row][col], True, self.thema.text)
+                        text_rect = text_surface.get_rect(center=(x + self.CELL_WIDTH // 4, y + self.CELL_HEIGHT // 2))
+                        self.SCREEN.blit(text_surface, text_rect)
+                    elif col == 1:
+                        pygame.draw.rect(self.SCREEN, self.thema.text, (x, y, self.CELL_WIDTH * 1.5, self.CELL_HEIGHT),
+                                         border_radius=3)
+                        pygame.draw.rect(self.SCREEN, self.thema.scoreboard_cells,
+                                         (x + 2, y + 2, (self.CELL_WIDTH - 2.5) *1.5, self.CELL_HEIGHT - 4),
+                                         border_radius=3)
+                        text_surface = font.render(table_data[row][col], True, self.thema.text)
+                        text_rect = text_surface.get_rect(center=(x + self.CELL_WIDTH * 1.5 // 2, y + self.CELL_HEIGHT // 2))
+                        self.SCREEN.blit(text_surface, text_rect)
+                    else:
+                        pygame.draw.rect(self.SCREEN, self.thema.text, (x, y, self.CELL_WIDTH, self.CELL_HEIGHT), border_radius=3)
+                        pygame.draw.rect(self.SCREEN, self.thema.scoreboard_cells,
+                                         (x + 2, y + 2, self.CELL_WIDTH - 4, self.CELL_HEIGHT - 4), border_radius=3)
 
-                    text_surface = font.render(table_data[row][col], True, self.thema.text)
-                    text_rect = text_surface.get_rect(center=(x + self.CELL_WIDTH // 2, y + self.CELL_HEIGHT // 2))
-                    self.SCREEN.blit(text_surface, text_rect)
+
+                        text_surface = font.render(table_data[row][col], True, self.thema.text)
+                        text_rect = text_surface.get_rect(center=(x + self.CELL_WIDTH // 2, y + self.CELL_HEIGHT // 2))
+
+                        self.SCREEN.blit(text_surface, text_rect)
 
     def handle_event(self, event: Event):
         if self.difficulty_easy_button.is_clicked(event):
