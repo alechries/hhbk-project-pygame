@@ -162,7 +162,7 @@ class BaseBoardPage(BasePage):
                             user.increment_chess_wins_hard()
                         elif self.game_type == GameType.CHESS_GAME:
                             user.increment_chess_wins_hard()
-                    
+
             self.won = True
 
         elif self.current_step == TeamType.WHITE_TEAM:
@@ -271,9 +271,9 @@ class BaseBoardPage(BasePage):
         level_name = 'UNKNOWN'
 
         if self.game_type == GameType.CHECKERS_GAME:
-            game_name = 'CHECKERS'
+            game_name = 'DAME'
         elif self.game_type == GameType.CHESS_GAME:
-            game_name = 'CHESS'
+            game_name = 'BAUERNSCHACH'
 
         if self.current_difficulty_level == LevelType.EASY:
             level_name = 'EASY LEVEL'
