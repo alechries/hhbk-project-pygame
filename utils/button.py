@@ -8,7 +8,7 @@ class Button:
         self.color = color
         self.background = background
         self.text = text
-        self.font = pygame.font.Font(None, 36)
+        self.font = pygame.font.Font(None, 28)
         self.text_surf = self.font.render(self.text, True, color)
         self.text_rect = self.text_surf.get_rect(center=self.rect.center)
 

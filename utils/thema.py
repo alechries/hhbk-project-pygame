@@ -26,5 +26,11 @@ class BaseTheme:
         self.button_text = self.config.BLACK
         self.button_background = self.config.WHITE
         self.scoreboard_cells = self.config.LIGHT_GRAY
+        self.close_button = self.config.RED
         self.button_yes = self.config.GREEN
         self.button_no = self.config.RED
+        self.score_wins = self.config.DARKER_GREEN
+        self.score_defeats = self.config.RED
+        self.logout_button = self.config.DARKER_RED
+        self.start_game_button = self.config.FOREST_GREEN
+
