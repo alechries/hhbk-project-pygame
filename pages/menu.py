@@ -24,7 +24,7 @@ class MenuPage(BasePage):
         self.button_y = self.SCREEN.get_height() // 2.5 - (self.button_height * 1.5)
 
         self.game_type: GameType = GameType.UNKNOWN
-        self.level_type: LevelType = LevelType.EASY
+        self.level_type: LevelType = LevelType(self.config.game_difficulty_level)
 
         self.page_name = 'menu'
         self.chess_game_button = Button(self.button_x, self.button_y, self.button_width, self.button_height, "Bauernschach",
@@ -111,7 +111,7 @@ class MenuPage(BasePage):
         if self.checkers_game_button.is_clicked(event):
             self.game_type = GameType.CHECKERS_GAME
         if self.difficulty_easy_button.is_clicked(event):
-            self.level_type = LevelType.EASY
+            self.level_type = LevelType.EASY.value
             self.config.game_difficulty_level = LevelType.EASY
         if self.difficulty_medium_button.is_clicked(event):
             self.level_type = LevelType.MEDIUM
@@ -134,6 +134,7 @@ class MenuPage(BasePage):
 
     def load_chess_game(self):
         print("Loading Chess game...")
+
         self.set_as_current_page_by_page_name('chess')
 
     def load_checkers_game(self):

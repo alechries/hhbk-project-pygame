@@ -21,6 +21,6 @@ class Button:
         if event.type == pygame.MOUSEBUTTONDOWN:
             response = self.rect.collidepoint(event.pos)
             if response:
-                print(self.text, "printed")
+                print(self.text, "clicked")
             return response
         return False
