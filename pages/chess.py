@@ -54,14 +54,12 @@ class ChessBoardPage(BaseBoardPage):
                     continue
 
                 piece_on_move_cell: Piece = current_map[move_row][move_column]
-                move = Cell(
-                    move_row, move_column, self.board_x, self.board_y, self.block_size, self.block_size,
-                    piece=piece, destroy_figures=[piece_on_move_cell, ] if piece_on_move_cell is not None else [])
 
-                if piece_on_move_cell is not None:
-                    continue
-
-                moves.append(move)
+                if piece_on_move_cell is None:
+                    move = Cell(
+                        move_row, move_column, self.board_x, self.board_y, self.block_size, self.block_size,
+                        piece=piece)
+                    moves.append(move)
 
         for move_column, move_row in [
             (piece_column - 1, piece_row + direction),
@@ -71,19 +69,18 @@ class ChessBoardPage(BaseBoardPage):
                 continue
 
             piece_on_move_cell: Piece = current_map[move_row][move_column]
-            move = Cell(
-                move_row, move_column, self.board_x, self.board_y, self.block_size, self.block_size,
-                piece=piece, destroy_figures=[])
 
             if piece_on_move_cell is not None:
-                if piece_on_move_cell.team_type == team_type:
-                    continue
-                elif piece_on_move_cell.team_type == enemy_team_type:
-                    move.destroy_figures.append(piece_on_move_cell)
-                if only_with_destroyed_pieces:
-                    if len(move.destroy_figures) == 0:
-                        continue
-                moves.append(move)
+                print(piece_on_move_cell.board_place_column, piece_on_move_cell.board_place_row, piece_on_move_cell.team_type)
+                if piece_on_move_cell.team_type == enemy_team_type:
+                    move = Cell(
+                        move_row, move_column, self.board_x, self.board_y, self.block_size, self.block_size,
+                        piece=piece, destroy_figures=[piece_on_move_cell, ])
+
+                    if only_with_destroyed_pieces:
+                        if len(move.destroy_figures) == 0:
+                            continue
+                    moves.append(move)
         return moves
 
     def generate_pieces(self, team_type: TeamType, spawn_type: SpawnType) -> typing.List[Piece]:
