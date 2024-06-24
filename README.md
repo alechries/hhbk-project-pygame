@@ -17,13 +17,14 @@ The introduction can be found in the file introduction.pdf
 - Python 3.8
 - Pygame
 
-## Installation with venv/pip
+## Installation with venv/pip and start with python/cmd
 
 1. Ensure you have Python 3.8 installed.
 2. Install the necessary dependencies:
 
 ```bash
 pip install -r requirements.txt
+python3 start.py # only in program folder with start.py
 ```
 
 ## Developers
