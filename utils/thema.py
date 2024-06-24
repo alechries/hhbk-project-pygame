@@ -26,3 +26,5 @@ class BaseTheme:
         self.button_text = self.config.BLACK
         self.button_background = self.config.WHITE
         self.scoreboard_cells = self.config.LIGHT_GRAY
+        self.button_yes = self.config.GREEN
+        self.button_no = self.config.RED
