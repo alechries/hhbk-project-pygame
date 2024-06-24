@@ -24,6 +24,8 @@ class BaseBoardPage(BasePage):
         self.__selected_piece = None
         self.__current_moves = []
         self.won = False
+        self.show_guide = False
+        self.guide_message = ['Kein Text :(']
         self.current_difficulty_level = LevelType(self.config.game_difficulty_level)
 
         self.num_blocks_horizontal = 6
@@ -65,6 +67,9 @@ class BaseBoardPage(BasePage):
 
         self.loser_overlay = pygame.Surface((self.SCREEN.get_width(), self.SCREEN.get_height()), pygame.SRCALPHA)
         self.loser_overlay.fill(self.thema.loser_glow)
+
+        self.guide_overlay = pygame.Surface((self.SCREEN.get_width(), self.SCREEN.get_height()), pygame.SRCALPHA)
+        self.guide_overlay.fill(self.thema.guide_glow)
 
         button_width = 300
         button_height = 50
@@ -281,7 +286,6 @@ class BaseBoardPage(BasePage):
         text_rect = text.get_rect(center=((self.board_x + self.board_width // 2), self.board_y + self.board_height + 40))
         self.SCREEN.blit(text, text_rect)
 
-
         # WINNER OR LOSER
 
         if self.won:
@@ -305,6 +309,33 @@ class BaseBoardPage(BasePage):
 
             for button in self.main_button_list:
                 button.draw(self.SCREEN)
+
+        # Guide message
+        if self.show_guide:
+
+            self.SCREEN.blit(self.guide_overlay, (0, 0))
+
+            guide_width = 600
+            guide_height = 200
+            guide_x = (self.SCREEN.get_width() - guide_width) // 2
+            guide_y = (self.SCREEN.get_height() - guide_height) // 2
+
+            guide_bg_color = self.thema.notification_background
+            guide_text_color = self.thema.notification_text
+            pygame.draw.rect(self.SCREEN, guide_bg_color,
+                             (guide_x, guide_y, guide_width, guide_height),
+                             border_radius=10)
+            pygame.draw.rect(self.SCREEN, self.thema.notification_border,
+                             (guide_x, guide_y, guide_width, guide_height), 2,
+                             border_radius=10)
+
+            line_height = 18
+            lines_height = len(self.guide_message) * line_height
+            for i, text in enumerate(self.guide_message):
+                guide_text = self.DEFAULT_FONT.render(text, True, guide_text_color)
+                guide_text_rect = guide_text.get_rect(center=(self.SCREEN.get_width() // 2,
+                                                              guide_y + guide_height // 2 - lines_height // 2 + line_height * i))
+                self.SCREEN.blit(guide_text, guide_text_rect)
 
     def minimax(self, current_map: typing.List[typing.List], main_team: TeamType, current_team: TeamType,
                 depth: int, skip_if_destroyed_figures=False, iteration=0) -> typing.Tuple[int, Cell or None]:
@@ -376,8 +407,12 @@ class BaseBoardPage(BasePage):
             return min_eval, best_move
 
     def handle_event(self, event: Event):
-
-        if self.won:
+        
+        if self.show_guide:
+            
+            pass
+        
+        elif self.won:
 
             if self.repeat_button.is_clicked(event):
                 self.restart_game()
@@ -398,7 +433,11 @@ class BaseBoardPage(BasePage):
                 self.restart_game()
                 self.set_as_current_page_by_page_name('menu')
 
-            if self.current_step == TeamType.WHITE_TEAM:
+            elif self.help_button.is_clicked(event):
+
+                self.show_guide = True
+
+            elif self.current_step == TeamType.WHITE_TEAM:
                 for i, piece in enumerate(self.pieces_by_current_teams_step):
                     if piece.is_clicked(event):
                         self.selected_piece = piece
@@ -574,16 +613,22 @@ class BaseBoardPage(BasePage):
         raise NotImplementedError
 
     def check_winner(self):
-
+        current_map = self.get_current_map_with_pieces(BoardCellType.ALL_CELL)
         if self.current_step == TeamType.BLACK_TEAM:
+
             return any((
                 len(self.white_team_pieces) == 0,
-                any([p.board_place_row == self.num_blocks_vertical - 1 for p in self.black_team_pieces])
+                any([p.board_place_row == self.num_blocks_vertical - 1 for p in self.black_team_pieces]),
+                not any([len(self.get_moves(p.board_place_column, p.board_place_row, p.team_type, current_map)) > 0 for p in
+                         self.white_team_pieces])
             ))
         elif self.current_step == TeamType.WHITE_TEAM:
             return any((
                 len(self.black_team_pieces) == 0,
-                any([p.board_place_row == 0 for p in self.white_team_pieces])
+                any([p.board_place_row == 0 for p in self.white_team_pieces]),
+                not any(
+                    [len(self.get_moves(p.board_place_column, p.board_place_row, p.team_type, current_map)) > 0 for p in
+                     self.black_team_pieces])
             ))
         else:
             return False

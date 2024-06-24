@@ -14,6 +14,15 @@ class CheckersBoardPage(BaseBoardPage):
     def __init__(self):
         super().__init__(GameType.CHECKERS_GAME)
         self.page_name = 'checkers'
+        self.guide_message = [
+            'Lorem ipsum dolor sit amet, consetetur sadipscing elitr,',
+            'sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,',
+            'sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.',
+            'Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.',
+            'Lorem ipsum dolor sit amet, consetetur sadipscing elitr,',
+            'sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,',
+            'sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.',
+        ]
 
     def get_moves(self, piece_column: int, piece_row: int, team_type: TeamType,
                   current_map: typing.List[typing.List[Piece]], only_with_destroyed_pieces=False) -> \
