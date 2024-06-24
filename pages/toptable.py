@@ -21,7 +21,7 @@ class TopTablePage(BasePage):
         self.PADDING_TABLE_HEIGHT = self.SCREEN.get_height() // 100 * self.PADDING_TABLE_PERCENT
         self.CELL_WIDTH = (self.SCREEN.get_width() - self.PADDING_TABLE_WIDTH * 2 - (self.COLUMNS - 1) * self.MARGIN) // self.COLUMNS
         self.CELL_HEIGHT = (self.SCREEN.get_height() - self.PADDING_TABLE_HEIGHT * 2 - (self.ROWS - 1) * self.MARGIN) // self.ROWS
-        self.user_data_list = UserModel().get_data()
+
         self.game_type: GameType = GameType.CHESS_GAME
         self.level_type: LevelType = LevelType.EASY
         self.page_name = 'toptable'
@@ -36,14 +36,17 @@ class TopTablePage(BasePage):
                                                background=self.thema.background)
         self.menu_button = Button(self.SCREEN.get_width() // 2 - 60, self.SCREEN.get_height() - self.PADDING_TABLE_HEIGHT * 2 + self.MARGIN, 120, 30, "Menü", self.thema.text, background=self.thema.background)
 
-        self.user_list = []
-        for user_data in self.user_data_list:
-            user = UserModel()
-            user.init_by_data(user_data)
-            self.user_list.append(user)
+
 
     def draw(self):
         super().draw()
+
+        user_data_list = UserModel().get_data()
+        user_list = []
+        for user_data in user_data_list:
+            user = UserModel()
+            user.init_by_data(user_data)
+            user_list.append(user)
 
         pygame.display.set_caption('Scoreboard')
 
@@ -56,38 +59,38 @@ class TopTablePage(BasePage):
         scoreboard_list = []
         if self.game_type == GameType.CHESS_GAME:
             if self.level_type == LevelType.EASY:
-                scoreboard_list = sorted(self.user_list, key=lambda x: x._chess_wins_easy, reverse=True)[:10]
+                scoreboard_list = sorted(user_list, key=lambda x: x._chess_wins_easy, reverse=True)[:10]
                 for score in scoreboard_list:
                     table_data[table_data_index] = [str(scoreboard_position), str(score._username), str(score._chess_wins_easy), str(score._chess_defeats_easy)]
                     table_data_index += 1
                     scoreboard_position += 1
             elif self.level_type == LevelType.MEDIUM:
-                scoreboard_list = sorted(self.user_list, key=lambda x: x._chess_wins_medium, reverse=True)[:10]
+                scoreboard_list = sorted(user_list, key=lambda x: x._chess_wins_medium, reverse=True)[:10]
                 for score in scoreboard_list:
                     table_data[table_data_index] = [str(scoreboard_position), str(score._username), str(score._chess_wins_medium), str(score._chess_defeats_medium)]
                     table_data_index += 1
                     scoreboard_position += 1
             elif self.level_type == LevelType.HARD:
-                scoreboard_list = sorted(self.user_list, key=lambda x: x._chess_wins_hard, reverse=True)[:10]
+                scoreboard_list = sorted(user_list, key=lambda x: x._chess_wins_hard, reverse=True)[:10]
                 for score in scoreboard_list:
                     table_data[table_data_index] = [str(scoreboard_position), str(score._username), str(score._chess_wins_hard), str(score._chess_defeats_hard)]
                     table_data_index += 1
                     scoreboard_position += 1
         elif self.game_type == GameType.CHECKERS_GAME:
             if self.level_type == LevelType.EASY:
-                scoreboard_list = sorted(self.user_list, key=lambda x: x._checkers_wins_easy, reverse=True)[:10]
+                scoreboard_list = sorted(user_list, key=lambda x: x._checkers_wins_easy, reverse=True)[:10]
                 for score in scoreboard_list:
                     table_data[table_data_index] = [str(scoreboard_position), str(score._username), str(score._checkers_wins_easy), str(score._checkers_defeats_easy)]
                     table_data_index += 1
                     scoreboard_position += 1
             elif self.level_type == LevelType.MEDIUM:
-                scoreboard_list = sorted(self.user_list, key=lambda x: x._checkers_wins_medium, reverse=True)[:10]
+                scoreboard_list = sorted(user_list, key=lambda x: x._checkers_wins_medium, reverse=True)[:10]
                 for score in scoreboard_list:
                     table_data[table_data_index] = [str(scoreboard_position), str(score._username), str(score._checkers_wins_medium), str(score._checkers_defeats_medium)]
                     table_data_index += 1
                     scoreboard_position += 1
             elif self.level_type == LevelType.HARD:
-                scoreboard_list = sorted(self.user_list, key=lambda x: x._checkers_wins_hard, reverse=True)[:10]
+                scoreboard_list = sorted(user_list, key=lambda x: x._checkers_wins_hard, reverse=True)[:10]
                 for score in scoreboard_list:
                     table_data[table_data_index] = [str(scoreboard_position), str(score._username), str(score._checkers_wins_hard), str(score._checkers_defeats_hard)]
                     table_data_index += 1
