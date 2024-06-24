@@ -23,35 +23,42 @@ class Algorithm:
     def minmax(board_page, current_map: typing.List[typing.List], main_team: TeamType, current_team: TeamType,
                depth: int, skip_if_destroyed_figures=False, iteration=0) -> typing.Tuple[int, Cell or None]:
 
-        current_team_pieces = [piece for row in current_map for piece in row if
-                               piece and piece.team_type == current_team]
-        enemy_team_pieces = [piece for row in current_map for piece in row if
-                             piece and piece.team_type != current_team]
+        current_team_pieces: typing.List[Piece] = []
+        enemy_team_pieces: typing.List[Piece] = []
+        all_current_team_moves: typing.List[Cell] = []
 
-        shuffle(current_team_pieces)
-        shuffle(enemy_team_pieces)
+        for row in current_map:
+            for column in row:
+                if column is not None:
+                    piece: Piece = column
 
-        if depth == 0:
-            points = len(current_team_pieces) - len(enemy_team_pieces)
-            print('Points', points)
+                    if piece.team_type == current_team:
+                        current_team_pieces.append(piece)
+                        moves = board_page.get_moves(
+                            piece_column=piece.minmax_place_column,
+                            piece_row=piece.minmax_place_row,
+                            team_type=current_team,
+                            current_map=current_map
+                        )
+                        for move in moves:
+                            all_current_team_moves.append(move)
+
+                    elif piece.team_type != current_team:
+                        enemy_team_pieces.append(piece)
+
+        if depth == 0 and len(all_current_team_moves) == 0:
+
+            if main_team == current_team:
+                points = len(current_team_pieces) - len(enemy_team_pieces)
+            else:
+                points = len(enemy_team_pieces) - len(current_team_pieces)
             return points, None
-
-        all_moves = []
-        for piece in current_team_pieces:
-            moves = board_page.get_moves(
-                piece_column=piece.minmax_place_column,
-                piece_row=piece.minmax_place_row,
-                team_type=current_team,
-                current_map=current_map
-            )
-            print(iteration, moves)
-            all_moves.extend(moves)
 
         best_move = None
         if main_team == current_team:
             max_eval = -math.inf
 
-            for move in all_moves:
+            for move in all_current_team_moves:
 
                 new_map = Algorithm.get_new_map(current_map, move)
 
@@ -66,13 +73,12 @@ class Algorithm:
                 if evaluation > max_eval:
                     max_eval = evaluation
                     best_move = move
-                    break
 
             return max_eval, best_move
         else:
 
             min_eval = math.inf
-            for move in all_moves:
+            for move in all_current_team_moves:
 
                 new_map = Algorithm.get_new_map(current_map, move)
 
@@ -86,7 +92,6 @@ class Algorithm:
                 if evaluation < min_eval:
                     min_eval = evaluation
                     best_move = move
-                    break
 
             return min_eval, best_move
 

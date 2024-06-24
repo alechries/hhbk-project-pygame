@@ -31,6 +31,8 @@ class ChessBoardPage(BaseBoardPage):
                   current_map: typing.List[typing.List[Piece]], only_with_destroyed_pieces=False) -> \
             typing.List[Cell]:
 
+        piece: Piece = current_map[piece_row][piece_column]
+
         if team_type == TeamType.WHITE_TEAM:
             direction = -1
             enemy_team_type = TeamType.BLACK_TEAM
@@ -40,13 +42,13 @@ class ChessBoardPage(BaseBoardPage):
         else:
             return []
 
-        piece: Piece = current_map[piece_row][piece_column]
         if piece is None:
             return []
 
         moves: typing.List[Cell] = []
 
         if not only_with_destroyed_pieces:
+
             for move_column, move_row in [
                 (piece_column, piece_row + direction),
             ]:
@@ -71,7 +73,6 @@ class ChessBoardPage(BaseBoardPage):
             piece_on_move_cell: Piece = current_map[move_row][move_column]
 
             if piece_on_move_cell is not None:
-                print(piece_on_move_cell.board_place_column, piece_on_move_cell.board_place_row, piece_on_move_cell.team_type)
                 if piece_on_move_cell.team_type == enemy_team_type:
                     move = Cell(
                         move_row, move_column, self.board_x, self.board_y, self.block_size, self.block_size,

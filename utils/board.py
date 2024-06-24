@@ -573,10 +573,10 @@ class BaseBoardPage(BasePage):
         if self.current_step == TeamType.BLACK_TEAM:
             depth = 0
 
-            if self.config.game_difficulty_level == LevelType.MEDIUM:
-                depth = 1
-            elif self.config.game_difficulty_level == LevelType.HARD:
-                depth = 2
+            # if self.config.game_difficulty_level == LevelType.MEDIUM:
+            #     depth = 10
+            # elif self.config.game_difficulty_level == LevelType.HARD:
+            #     depth = 20
 
             if depth > 0:
                 _, cell = Algorithm.minmax(
