@@ -117,7 +117,7 @@ class BaseBoardPage(BasePage):
             self.help_button,
         )
 
-        self.guide_close_button = Button(self.guide_x + self.guide_width // 2 - button_width // 2, self.guide_y + self.guide_height + 50, button_width, button_height, "Verstanden",
+        self.guide_close_button = Button(self.guide_x + self.guide_width // 2 - button_width // 2, self.guide_y + self.guide_height + 25, button_width, button_height, "Verstanden",
                                          self.thema.button_text, background=self.thema.button_background, )
 
     def change_step_side(self, dont_change_to_next_team=False):
