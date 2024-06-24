@@ -121,7 +121,7 @@ class BaseBoardPage(BasePage):
         self.guide_close_button = Button(button_x, button_y, button_width, button_height, "Verstanden",
                                          self.thema.button_text, background=self.thema.button_background, )
 
-    def change_step_side(self):
+    def change_step_side(self, dont_change_to_next_team=False):
         if self.won or self.check_winner():
             if not self.won and self.current_user is not None:
                 user: UserModel = self.current_user
@@ -175,9 +175,9 @@ class BaseBoardPage(BasePage):
 
             self.won = True
 
-        elif self.current_step == TeamType.WHITE_TEAM:
+        elif self.current_step == TeamType.WHITE_TEAM and not dont_change_to_next_team:
             self.current_step = TeamType.BLACK_TEAM
-        elif self.current_step == TeamType.BLACK_TEAM:
+        elif self.current_step == TeamType.BLACK_TEAM and not dont_change_to_next_team:
             self.current_step = TeamType.WHITE_TEAM
 
     def draw(self):
@@ -484,8 +484,7 @@ class BaseBoardPage(BasePage):
 
                             self.selected_piece = None
 
-                            if not skip_next_team_change:
-                                self.change_step_side()
+                            self.change_step_side(skip_next_team_change)
 
                             pygame.time.set_timer(EventType.ENEMY_MOVE_EVENT, 1000)
                             break
@@ -713,8 +712,8 @@ class BaseBoardPage(BasePage):
                     pygame.time.set_timer(EventType.ENEMY_MOVE_EVENT, 1000)
 
             self.selected_piece = None
-            if not skip_next_team_change:
-                self.change_step_side()
+
+            self.change_step_side(skip_next_team_change)
 
     def exit_event(self):
         pass
