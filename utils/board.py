@@ -307,8 +307,10 @@ class BaseBoardPage(BasePage):
                 button.draw(self.SCREEN)
 
     def minimax(self, current_map: typing.List[typing.List], main_team: TeamType, current_team: TeamType,
-                depth: int, skip_if_destroyed_figures=False) -> typing.Tuple[int, Cell or None]:
+                depth: int, skip_if_destroyed_figures=False, iteration=0) -> typing.Tuple[int, Cell or None]:
 
+        print(f'Start iteration {iteration}')
+        print(f'Depth {depth}')
         if depth == 0:
             return 0, None  # Assuming 0 is the base evaluation at depth 0
 
@@ -325,7 +327,10 @@ class BaseBoardPage(BasePage):
             )
             all_moves.extend(moves)
 
+        print(f'Moves {len(all_moves)}')
+
         best_move = None
+        print('Main team', main_team, '; Current team: ', current_team)
         if main_team == current_team:
             max_eval = -math.inf
             for move in all_moves:
@@ -339,10 +344,11 @@ class BaseBoardPage(BasePage):
                 destroy_figures_count = len(move.destroy_figures)
                 if not skip_if_destroyed_figures or destroy_figures_count == 0:
                     current_team = self.reverse_team(current_team)
-                evaluation, _ = self.minimax(new_board, main_team, current_team, depth - 1, skip_if_destroyed_figures)
-
+                evaluation, _ = self.minimax(new_board, main_team, current_team, depth - 1, skip_if_destroyed_figures, iteration=iteration + 1)
+                print('Minimax returned evaluation', evaluation)
                 evaluation += len(move.destroy_figures)
-
+                print('Minmax returned evaluation with destroy figures factor', evaluation)
+                print('Max eval', max_eval)
                 if evaluation > max_eval:
                     max_eval = evaluation
                     best_move = move
