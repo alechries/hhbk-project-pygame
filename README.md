@@ -2,15 +2,18 @@
 
 ## Description
 
-This is a ~~completed~~ project work on Python using Pygame and SQLite.
+This is a completed project work on Python using Pygame and SQLite.
+
+## Guide to start on Windows
+
+The introduction can be found in the file introduction.pdf
 
 ## Requirements
 
 - Python 3.8
 - Pygame
-- SQLite
 
-## Installation
+## Installation with venv/pip
 
 1. Ensure you have Python 3.8 installed.
 2. Install the necessary dependencies:
