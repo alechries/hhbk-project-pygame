@@ -52,11 +52,16 @@ class MenuPage(BasePage):
                                         background=self.thema.background)
         self.log_out_button = Button(self.SCREEN.get_width() - self.difficulty_button_width - self.buttons_margin,
                                      self.buttons_margin, self.difficulty_button_width, self.button_height, "Logout",
-                                     self.thema.text, background=self.thema.close_button)
+                                     self.thema.text, background=self.thema.logout_button)
+
+        self.scoreboard_button = Button(self.SCREEN.get_width() - (self.difficulty_button_width + self.buttons_margin) *2 - self.difficulty_button_width // 2,
+                                        self.buttons_margin, self.difficulty_button_width * 1.5, self.button_height, "Bestenliste",
+                                        self.thema.text, background=self.thema.button_background)
 
         self.buttons: typing.List[Button] = [
             self.chess_game_button, self.checkers_game_button, self.difficulty_easy_button,
-            self.difficulty_medium_button, self.difficulty_hard_button, self.start_game_button, self.log_out_button
+            self.difficulty_medium_button, self.difficulty_hard_button, self.start_game_button, self.log_out_button,
+            self.scoreboard_button
         ]
 
     def draw(self):
@@ -81,6 +86,11 @@ class MenuPage(BasePage):
             self.difficulty_easy_button.color = self.thema.text
             self.difficulty_medium_button.color = self.thema.text
             self.difficulty_hard_button.color = self.thema.button_pressed
+
+        if self.level_type == LevelType.UNKNOWN or self.game_type == GameType.UNKNOWN:
+            self.start_game_button.background = self.thema.table_part_1
+        else:
+            self.start_game_button.background = self.thema.start_game_button
 
         pygame.draw.rect(self.SCREEN, self.thema.text, (self.button_x - 10, self.chess_game_button.rect.y - 10,
                                                         self.button_width + 20,
@@ -116,6 +126,8 @@ class MenuPage(BasePage):
                 self.load_checkers_game()
         if self.log_out_button.is_clicked(event):
             self.log_out_button_handler()
+        if self.scoreboard_button.is_clicked(event):
+            self.set_as_current_page_by_page_name("toptable")
 
     def choose_game_button_handler(self):
         print("Choose Game button handler")
