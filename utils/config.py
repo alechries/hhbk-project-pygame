@@ -1,6 +1,8 @@
 import json
 import os
 
+from utils.types import LevelType
+
 
 class Config:
 
@@ -27,6 +29,13 @@ class Config:
     BLUE_TRANSPARENT = (0, 0, 255, 128)
     GREEN_TRANSPARENT = (0, 255, 0, 128)
     RED_TRANSPARENT = (255, 0, 0, 128)
+
+    _instance = None
+
+    def __new__(cls, *args, **kwargs):
+        if cls._instance is None:
+            cls._instance = super(Config, cls).__new__(cls, *args, **kwargs)
+        return cls._instance
 
     def __init__(self, config_file='config.json'):
         self.config_file = config_file
@@ -119,12 +128,14 @@ class Config:
         self.save_config()
 
     @property
-    def game_difficulty_level(self) -> int:
-        return self.__game_difficulty_level
+    def game_difficulty_level(self) -> LevelType:
+        print('game_difficulty_level GET', LevelType(self.__game_difficulty_level))
+        return LevelType(self.__game_difficulty_level)
 
     @game_difficulty_level.setter
-    def game_difficulty_level(self, value: int):
-        self.__game_difficulty_level = value
+    def game_difficulty_level(self, value: LevelType):
+        self.__game_difficulty_level = value.value
+        print('game_difficulty_level SET', LevelType(self.__game_difficulty_level))
         self.save_config()
 
     @property

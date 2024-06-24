@@ -537,6 +537,11 @@ class BaseBoardPage(BasePage):
     def selected_piece(self) -> Piece:
         return self.__selected_piece
 
+    def set_as_current_page(self):
+        self.restart_game()
+        print(self.current_difficulty_level)
+        super().set_as_current_page()
+
     def restart_game(self):
 
         self.__selected_piece = None
