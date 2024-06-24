@@ -17,8 +17,8 @@ class Piece:
         self.board_y = board_y
         self.width = width
         self.height = height
-        self.board_place_row = board_place_row
-        self.board_place_column = board_place_column
+        self.__board_place_row = board_place_row
+        self.__board_place_column = board_place_column
         self.minmax_place_row = 0
         self.minmax_place_column = 0
 
@@ -27,6 +27,25 @@ class Piece:
         self.spawn_type = spawn_type if spawn_type else SpawnType.BOTTOM_SPAWN
 
         self.selected = False
+
+    @property
+    def board_place_row(self):
+        return self.__board_place_row
+
+    @board_place_row.setter
+    def board_place_row(self, value):
+        self.__board_place_row = value
+        self.minmax_place_row = value
+
+    @property
+    def board_place_column(self):
+        return self.__board_place_column
+
+    @board_place_column.setter
+    def board_place_column(self, value):
+        self.__board_place_column = value
+        self.minmax_place_column = value
+
 
     @property
     def x(self):
