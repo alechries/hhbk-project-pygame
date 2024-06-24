@@ -3,6 +3,7 @@ import typing
 import pygame
 
 from models.user import UserModel
+from utils.algorithm import Algorithm
 from utils.cell import Cell
 from utils.page import BasePage
 from utils.button import Button
@@ -117,7 +118,9 @@ class BaseBoardPage(BasePage):
             self.help_button,
         )
 
-        self.guide_close_button = Button(self.guide_x + self.guide_width // 2 - button_width // 2, self.guide_y + self.guide_height + 25, button_width, button_height, "Verstanden",
+        self.guide_close_button = Button(self.guide_x + self.guide_width // 2 - button_width // 2,
+                                         self.guide_y + self.guide_height + 25, button_width, button_height,
+                                         "Verstanden",
                                          self.thema.button_text, background=self.thema.button_background, )
 
     def change_step_side(self, dont_change_to_next_team=False):
@@ -344,76 +347,6 @@ class BaseBoardPage(BasePage):
 
             self.guide_close_button.draw(self.SCREEN)
 
-    def minimax(self, current_map: typing.List[typing.List], main_team: TeamType, current_team: TeamType,
-                depth: int, skip_if_destroyed_figures=False, iteration=0) -> typing.Tuple[int, Cell or None]:
-
-        print(f'Start iteration {iteration}')
-        print(f'Depth {depth}')
-        if depth == 0:
-            return 0, None  # Assuming 0 is the base evaluation at depth 0
-
-        current_team_pieces = [piece for row in current_map for piece in row if
-                               piece and piece.team_type == current_team]
-
-        all_moves = []
-        for piece in current_team_pieces:
-            moves = self.get_moves(
-                piece_column=piece.minmax_place_column,
-                piece_row=piece.minmax_place_row,
-                team_type=current_team,
-                current_map=current_map
-            )
-            all_moves.extend(moves)
-
-        print(f'Moves {len(all_moves)}')
-
-        best_move = None
-        print('Main team', main_team, '; Current team: ', current_team)
-        if main_team == current_team:
-            max_eval = -math.inf
-            for move in all_moves:
-                new_board = copy.deepcopy(current_map)
-                new_board[move.piece.minmax_place_row][move.piece.minmax_place_column] = None
-                new_piece = copy.deepcopy(move.piece)
-                new_board[move.board_row][move.board_column] = new_piece
-                new_piece.minmax_place_row = move.board_row
-                new_piece.minmax_place_column = move.board_column
-
-                destroy_figures_count = len(move.destroy_figures)
-                if not skip_if_destroyed_figures or destroy_figures_count == 0:
-                    current_team = self.reverse_team(current_team)
-                evaluation, _ = self.minimax(new_board, main_team, current_team, depth - 1, skip_if_destroyed_figures,
-                                             iteration=iteration + 1)
-                print('Minimax returned evaluation', evaluation)
-                evaluation += len(move.destroy_figures)
-                print('Minmax returned evaluation with destroy figures factor', evaluation)
-                print('Max eval', max_eval)
-                if evaluation > max_eval:
-                    max_eval = evaluation
-                    best_move = move
-
-            return max_eval, best_move
-        else:
-            min_eval = math.inf
-            for move in all_moves:
-                new_board = copy.deepcopy(current_map)
-                new_board[move.piece.minmax_place_row][move.piece.minmax_place_column] = None
-                new_piece = copy.deepcopy(move.piece)
-                new_board[move.board_row][move.board_column] = new_piece
-                new_piece.minmax_place_row = move.board_row
-                new_piece.minmax_place_column = move.board_column
-
-                destroy_figures_count = len(move.destroy_figures)
-                if not skip_if_destroyed_figures or destroy_figures_count == 0:
-                    current_team = self.reverse_team(current_team)
-                evaluation, _ = self.minimax(new_board, main_team, current_team, depth - 1, skip_if_destroyed_figures)
-                evaluation -= len(move.destroy_figures)
-
-                if evaluation < min_eval:
-                    min_eval = evaluation
-                    best_move = move
-            return min_eval, best_move
-
     def handle_event(self, event: Event):
 
         if self.show_guide:
@@ -474,6 +407,7 @@ class BaseBoardPage(BasePage):
 
                             if len(move.destroy_figures) > 0 and move.skip_next_team_change:
                                 moves = self.get_moves(
+                                    self,
                                     piece_column=self.selected_piece.board_place_column,
                                     piece_row=self.selected_piece.board_place_row,
                                     team_type=self.selected_piece.team_type,
@@ -572,15 +506,6 @@ class BaseBoardPage(BasePage):
         direction_team = -1 if team == TeamType.WHITE_TEAM else 1
         return direction_team
 
-    @staticmethod
-    def reverse_team(team: TeamType):
-        if team == TeamType.WHITE_TEAM:
-            return TeamType.BLACK_TEAM
-        elif team == TeamType.BLACK_TEAM:
-            return TeamType.WHITE_TEAM
-        else:
-            return TeamType.UNKNOWN_TEAM
-
     @property
     def selected_piece(self) -> Piece:
         return self.__selected_piece
@@ -610,9 +535,9 @@ class BaseBoardPage(BasePage):
         self.won = False
         if value is not None:
             self.__current_moves = self.get_moves(
-                self.selected_piece.board_place_column,
-                self.selected_piece.board_place_row,
-                self.selected_piece.team_type,
+                self.__selected_piece.board_place_column,
+                self.__selected_piece.board_place_row,
+                self.__selected_piece.team_type,
                 self.get_current_map_with_pieces(BoardCellType.ALL_CELL)
             )
         else:
@@ -649,18 +574,18 @@ class BaseBoardPage(BasePage):
             depth = 0
 
             if self.config.game_difficulty_level == LevelType.MEDIUM:
-                depth = 2
+                depth = 1
             elif self.config.game_difficulty_level == LevelType.HARD:
-                depth = 5
+                depth = 2
 
             if depth > 0:
-                _, cell = self.minimax(
+                _, cell = Algorithm.minmax(
+                    board_page=self,
                     current_map=self.get_current_map_with_pieces(BoardCellType.ALL_CELL),
                     main_team=TeamType.BLACK_TEAM,
                     current_team=TeamType.BLACK_TEAM,
                     depth=depth,
                 )
-                print(cell)
             else:
                 current_map = self.get_current_map_with_pieces(BoardCellType.ALL_CELL)
 
