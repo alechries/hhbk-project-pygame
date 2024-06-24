@@ -84,7 +84,7 @@ class BaseBoardPage(BasePage):
                                     self.thema.button_text, background=self.thema.button_background, )
 
         button_y += button_height + buttons_margin
-        self.toptable_button = Button(button_x, button_y, button_width, button_height, "Rating-Tabelle",
+        self.toptable_button = Button(button_x, button_y, button_width, button_height, "Bestenliste",
                                       self.thema.button_text, background=self.thema.button_background, )
 
         self.end_button_list = (
@@ -263,7 +263,7 @@ class BaseBoardPage(BasePage):
 
         # INFO
 
-        pygame.draw.rect(self.SCREEN, self.thema.background,
+        pygame.draw.rect(self.SCREEN, self.thema.notification_text,
                          [self.board_x, self.board_y + self.board_height + 20, self.board_width, 40
                           ], border_radius=2)
 
@@ -271,18 +271,18 @@ class BaseBoardPage(BasePage):
         level_name = 'UNKNOWN'
 
         if self.game_type == GameType.CHECKERS_GAME:
-            game_name = 'DAME'
+            game_name = 'Dame'
         elif self.game_type == GameType.CHESS_GAME:
-            game_name = 'BAUERNSCHACH'
+            game_name = 'Bauernschach'
 
         if self.current_difficulty_level == LevelType.EASY:
-            level_name = 'EASY LEVEL'
+            level_name = 'Easy'
         elif self.current_difficulty_level == LevelType.MEDIUM:
-            level_name = 'MEDIUM LEVEL'
+            level_name = 'Medium'
         elif self.current_difficulty_level == LevelType.HARD:
-            level_name = 'HARD LEVEL'
+            level_name = 'Hard'
 
-        text = self.MEDIUM_FONT.render(f'{game_name} - {level_name}', True, self.thema.notification_text)
+        text = self.MEDIUM_FONT.render(f'{game_name} - {level_name}', True, self.config.LIGHT_GRAY)
         text_rect = text.get_rect(center=((self.board_x + self.board_width // 2), self.board_y + self.board_height + 40))
         self.SCREEN.blit(text, text_rect)
 
