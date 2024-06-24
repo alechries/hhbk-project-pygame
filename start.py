@@ -5,6 +5,8 @@ import inspect
 import importlib
 from pathlib import Path
 
+from pygame import Surface
+
 from models.user import UserModel
 from utils.board import BaseBoardPage
 from utils.config import Config
@@ -45,6 +47,13 @@ def start_app():
     config = Config()
 
     BaseModel.initialize_tables()
+
+    programIcon = pygame.image.load(os.path.join(config.images_dir, 'logo.png'))
+    pygame.display.set_icon(programIcon)
+    pygame.display.set_caption(config.app_name)
+    screen: Surface = pygame.display.set_mode((config.screen_width, config.screen_height))
+    BasePage.SCREEN = screen
+
     pages_initialize()
 
     BasePage.set_as_current_page_by_page_name(config.start_page)

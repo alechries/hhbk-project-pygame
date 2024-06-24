@@ -15,14 +15,10 @@ from pathlib import Path
 from os import path
 
 config = Config()
-programIcon = pygame.image.load(os.path.join(config.images_dir, 'logo.png'))
-pygame.display.set_icon(programIcon)
-pygame.display.set_caption(config.app_name)
-screen: Surface = set_mode((config.screen_width, config.screen_height))
 
 
 class BasePage:
-    SCREEN = screen
+    SCREEN = None
     CURRENT_PAGE = None
     PAGES_HISTORY = []
     PAGES = {}

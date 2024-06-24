@@ -20,6 +20,7 @@ class GameType(IntEnum):
 
 class LevelType(IntEnum):
 
+    UNKNOWN = 0
     EASY = 1
     MEDIUM = 2
     HARD = 3
