@@ -301,13 +301,13 @@ class BaseBoardPage(BasePage):
         if self.won:
             if self.current_step == TeamType.WHITE_TEAM:
                 self.SCREEN.blit(self.winner_overlay, (0, 0))
-                text = self.BIG_FONT.render('SIE SIND GEWINNER :)', True, self.thema.winner_notification_text,
+                text = self.BIG_FONT.render('SIE HABEN GEWONNEN :)', True, self.thema.winner_notification_text,
                                             self.thema.winner_notification_background)
                 text_rect = text.get_rect(center=(self.SCREEN.get_width() // 2, self.SCREEN.get_height() // 3))
                 self.SCREEN.blit(text, text_rect)
             elif self.current_step == TeamType.BLACK_TEAM:
                 self.SCREEN.blit(self.loser_overlay, (0, 0))
-                text = self.BIG_FONT.render('SIE SIND VERLIERER :(', True, self.thema.loser_notification_text,
+                text = self.BIG_FONT.render('SIE HABEN VERLOREN :(', True, self.thema.loser_notification_text,
                                             self.thema.loser_notification_background)
                 text_rect = text.get_rect(center=(self.SCREEN.get_width() // 2, self.SCREEN.get_height() // 3))
                 self.SCREEN.blit(text, text_rect)
