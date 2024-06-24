@@ -1,4 +1,5 @@
 import os.path
+
 import pygame
 import sys
 import inspect
@@ -30,6 +31,7 @@ def pages_initialize():
         module = importlib.import_module(module_name)
 
         for name, obj in inspect.getmembers(module, inspect.isclass):
+
             if issubclass(obj, BasePage) and obj is not BasePage and obj is not BaseBoardPage:
                 instance = obj()
                 if instance.page_name:
