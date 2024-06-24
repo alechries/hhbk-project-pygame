@@ -4,6 +4,10 @@
 
 This is a completed project work on Python using Pygame and SQLite.
 
+## Error Log
+
+The error log can be found in the file errorlog.pdf
+
 ## Guide to start on Windows
 
 The introduction can be found in the file introduction.pdf
