@@ -23,7 +23,7 @@ The introduction can be found in the file introduction.pdf
 2. Install the necessary dependencies:
 
 ```bash
-pip install -r requirements.txt
+pip3 install -r requirements.txt # or only 'pip install pygame'
 python3 start.py # only in program folder with start.py
 ```
 
