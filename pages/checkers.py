@@ -6,7 +6,7 @@ from pygame.event import Event
 from random import choice
 import pygame
 from utils.piece import Piece
-from utils.types import GameType, LevelType, TeamType
+from utils.types import GameType, LevelType, TeamType, SpawnType
 
 
 class CheckersBoardPage(BaseBoardPage):
@@ -39,7 +39,7 @@ class CheckersBoardPage(BaseBoardPage):
                 (piece_column - 1, piece_row + direction),
                 (piece_column + 1, piece_row + direction),
             ]:
-                if move_column < 0 or move_column >= self.num_blocks_horizontal or move_row < 0 or move_column >= self.num_blocks_vertical:
+                if move_column < 0 or move_column >= self.num_blocks_horizontal or move_row < 0 or move_row >= self.num_blocks_vertical:
                     continue
 
                 piece_on_move_cell: Piece = current_map[move_row][move_column]
@@ -48,7 +48,7 @@ class CheckersBoardPage(BaseBoardPage):
                     continue
                 move = Cell(
                     move_row, move_column, self.board_x, self.board_y, self.block_size, self.block_size,
-                    piece=piece, destroy_figures=[])
+                    piece=piece, destroy_figures=[], skip_next_team_change=True)
                 moves.append(move)
 
         for move_column, move_row, destroy_column, destroy_row in [
@@ -71,8 +71,33 @@ class CheckersBoardPage(BaseBoardPage):
 
             move = Cell(
                 move_row, move_column, self.board_x, self.board_y, self.block_size, self.block_size,
-                piece=piece, destroy_figures=[destroy_piece, ] if piece_on_move_cell is not None else [])
+                piece=piece, destroy_figures=[destroy_piece, ], skip_next_team_change=True)
 
-            move.destroy_figures.append(piece_on_move_cell)
             moves.append(move)
         return moves
+
+    def generate_pieces(self, team_type: TeamType, spawn_type: SpawnType) -> typing.List[Piece]:
+
+        # direction = -1 if spawn_type == SpawnType.BOTTOM_SPAWN else 1
+
+        created_pieces: typing.List[Piece] = []
+
+        spawn_row = 0 if spawn_type == SpawnType.TOP_SPAWN else self.num_blocks_vertical - 2
+
+        for i_column in range(self.num_blocks_horizontal):
+            i_row = spawn_row if i_column % 2 != 0 else spawn_row + 1
+            created_pieces.append(
+                Piece(
+                    board_x=self.board_x,
+                    board_y=self.board_y,
+                    width=self.piece_size,
+                    height=self.piece_size,
+                    board_place_row=i_row,
+                    board_place_column=i_column,
+                    game_type=self.game_type,
+                    team_type=team_type,
+                    spawn_type=spawn_type
+                )
+            )
+
+        return created_pieces
