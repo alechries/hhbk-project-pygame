@@ -30,11 +30,11 @@ class TopTablePage(BasePage):
                                                background=self.thema.background)
         self.difficulty_hard_button = Button(self.PADDING_TABLE_WIDTH + 255, self.PADDING_TABLE_HEIGHT, 120, 30, "Hard", self.thema.text,
                                              background=self.thema.background)
-        self.gamemode_chess_button = Button(self.SCREEN.get_width() - self.PADDING_TABLE_WIDTH -245, self.PADDING_TABLE_HEIGHT, 120, 30, "Chess", self.thema.text,
+        self.gamemode_chess_button = Button(self.SCREEN.get_width() - self.PADDING_TABLE_WIDTH -245, self.PADDING_TABLE_HEIGHT, 120, 30, "Schach", self.thema.text,
                                             background=self.thema.background)
-        self.gamemode_checkers_button = Button(self.SCREEN.get_width() - self.PADDING_TABLE_WIDTH -120, self.PADDING_TABLE_HEIGHT, 120, 30, "Checkers", self.thema.text,
+        self.gamemode_checkers_button = Button(self.SCREEN.get_width() - self.PADDING_TABLE_WIDTH -120, self.PADDING_TABLE_HEIGHT, 120, 30, "Dame", self.thema.text,
                                                background=self.thema.background)
-        self.menu_button = Button(self.SCREEN.get_width() // 2 - 60, self.SCREEN.get_height() - self.PADDING_TABLE_HEIGHT * 2 + self.MARGIN, 120, 30, "Back", self.thema.text, background=self.thema.background)
+        self.menu_button = Button(self.SCREEN.get_width() // 2 - 60, self.SCREEN.get_height() - self.PADDING_TABLE_HEIGHT * 2 + self.MARGIN, 120, 30, "Menü", self.thema.text, background=self.thema.background)
 
         self.user_list = []
         for user_data in self.user_data_list:
@@ -50,7 +50,7 @@ class TopTablePage(BasePage):
         font = pygame.font.SysFont(None, 30)
 
         table_data = [['' for _ in range(self.COLUMNS)] for _ in range(self.ROWS)]
-        table_data[1] = ['#', 'Username', 'Wins', 'Defeats']
+        table_data[1] = ['#', 'Username', 'W', 'L']
         table_data_index = 2
         scoreboard_position = 1
         scoreboard_list = []
@@ -125,27 +125,42 @@ class TopTablePage(BasePage):
                 if row > 0:
                     if col == 1:
                         x = self.PADDING_TABLE_WIDTH + self.MARGIN + col * (self.CELL_WIDTH // 2 + self.MARGIN)
+                    elif col == 2:
+                        x = self.PADDING_TABLE_WIDTH + self.MARGIN + 3 * (self.CELL_WIDTH + self.MARGIN) - self.MARGIN
+                    elif col == 3:
+                        x = self.PADDING_TABLE_WIDTH + self.MARGIN + 3 * (self.CELL_WIDTH + self.MARGIN) + self.CELL_WIDTH // 2
                     else:
                         x = self.PADDING_TABLE_WIDTH + self.MARGIN + col * (self.CELL_WIDTH + self.MARGIN)
 
                     y = self.PADDING_TABLE_HEIGHT + self.MARGIN + row * (self.CELL_HEIGHT + self.MARGIN)
 
-                    if col == 0:
+                    if col == 0 or col == 2 or col == 3:
                         pygame.draw.rect(self.SCREEN, self.thema.text, (x, y, self.CELL_WIDTH // 2, self.CELL_HEIGHT),
                                          border_radius=3)
                         pygame.draw.rect(self.SCREEN, self.thema.scoreboard_cells,
                                          (x + 2, y + 2, (self.CELL_WIDTH - 8) // 2, self.CELL_HEIGHT - 4), border_radius=3)
-                        text_surface = font.render(table_data[row][col], True, self.thema.text)
-                        text_rect = text_surface.get_rect(center=(x + self.CELL_WIDTH // 4, y + self.CELL_HEIGHT // 2))
-                        self.SCREEN.blit(text_surface, text_rect)
+                        if col == 2 and row > 1:
+                            text_surface = font.render(table_data[row][col], True, self.thema.score_wins)
+                            text_rect = text_surface.get_rect(
+                                center=(x + self.CELL_WIDTH // 4, y + self.CELL_HEIGHT // 2))
+                            self.SCREEN.blit(text_surface, text_rect)
+                        elif col == 3 and row > 1:
+                            text_surface = font.render(table_data[row][col], True, self.thema.score_defeats)
+                            text_rect = text_surface.get_rect(
+                                center=(x + self.CELL_WIDTH // 4, y + self.CELL_HEIGHT // 2))
+                            self.SCREEN.blit(text_surface, text_rect)
+                        else:
+                            text_surface = font.render(table_data[row][col], True, self.thema.text)
+                            text_rect = text_surface.get_rect(center=(x + self.CELL_WIDTH // 4, y + self.CELL_HEIGHT // 2))
+                            self.SCREEN.blit(text_surface, text_rect)
                     elif col == 1:
-                        pygame.draw.rect(self.SCREEN, self.thema.text, (x, y, self.CELL_WIDTH * 1.5, self.CELL_HEIGHT),
+                        pygame.draw.rect(self.SCREEN, self.thema.text, (x, y, self.CELL_WIDTH * 2.5, self.CELL_HEIGHT),
                                          border_radius=3)
                         pygame.draw.rect(self.SCREEN, self.thema.scoreboard_cells,
-                                         (x + 2, y + 2, (self.CELL_WIDTH - 2.5) *1.5, self.CELL_HEIGHT - 4),
+                                         (x + 2, y + 2, (self.CELL_WIDTH - 1.25) *2.5, self.CELL_HEIGHT - 4),
                                          border_radius=3)
                         text_surface = font.render(table_data[row][col], True, self.thema.text)
-                        text_rect = text_surface.get_rect(center=(x + self.CELL_WIDTH * 1.5 // 2, y + self.CELL_HEIGHT // 2))
+                        text_rect = text_surface.get_rect(center=(x + self.CELL_WIDTH * 2.5 // 2, y + self.CELL_HEIGHT // 2))
                         self.SCREEN.blit(text_surface, text_rect)
                     else:
                         pygame.draw.rect(self.SCREEN, self.thema.text, (x, y, self.CELL_WIDTH, self.CELL_HEIGHT), border_radius=3)

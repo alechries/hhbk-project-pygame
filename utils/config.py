@@ -10,6 +10,7 @@ class Config:
     DARK_RED = (204, 0, 0)
     GREEN = (0, 255, 0)
     DARK_GREEN = (102, 204, 0)
+    DARKER_GREEN = (0, 100, 0)
     BLUE = (0, 0, 255)
     YELLOW = (255, 255, 0)
     CYAN = (0, 255, 255)
