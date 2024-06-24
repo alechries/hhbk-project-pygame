@@ -307,7 +307,7 @@ class BaseBoardPage(BasePage):
                 button.draw(self.SCREEN)
 
     def minimax(self, current_map: typing.List[typing.List], main_team: TeamType, current_team: TeamType,
-                depth: int, alpha: int, beta: int, skip_if_destroyed_figures=False) -> typing.Tuple[int, Cell or None]:
+                depth: int, skip_if_destroyed_figures=False) -> typing.Tuple[int, Cell or None]:
 
         if depth == 0:
             return 0, None  # Assuming 0 is the base evaluation at depth 0
@@ -339,17 +339,14 @@ class BaseBoardPage(BasePage):
                 destroy_figures_count = len(move.destroy_figures)
                 if not skip_if_destroyed_figures or destroy_figures_count == 0:
                     current_team = self.reverse_team(current_team)
-                evaluation, _ = self.minimax(new_board, main_team, current_team, depth - 1, alpha,
-                                             beta, skip_if_destroyed_figures)
+                evaluation, _ = self.minimax(new_board, main_team, current_team, depth - 1, skip_if_destroyed_figures)
 
                 evaluation += len(move.destroy_figures)
 
                 if evaluation > max_eval:
                     max_eval = evaluation
                     best_move = move
-                alpha = max(alpha, evaluation)
-                if beta <= alpha:
-                    break
+                   
             return max_eval, best_move
         else:
             min_eval = math.inf
@@ -364,16 +361,12 @@ class BaseBoardPage(BasePage):
                 destroy_figures_count = len(move.destroy_figures)
                 if not skip_if_destroyed_figures or destroy_figures_count == 0:
                     current_team = self.reverse_team(current_team)
-                evaluation, _ = self.minimax(new_board, main_team, current_team, depth - 1, alpha,
-                                             beta, skip_if_destroyed_figures)
+                evaluation, _ = self.minimax(new_board, main_team, current_team, depth - 1,  skip_if_destroyed_figures)
                 evaluation -= len(move.destroy_figures)
 
                 if evaluation < min_eval:
                     min_eval = evaluation
                     best_move = move
-                beta = min(beta, evaluation)
-                if beta <= alpha:
-                    break
             return min_eval, best_move
 
     def handle_event(self, event: Event):
@@ -600,9 +593,8 @@ class BaseBoardPage(BasePage):
                     main_team=TeamType.BLACK_TEAM,
                     current_team=TeamType.BLACK_TEAM,
                     depth=depth,
-                    alpha=0,
-                    beta=0
                 )
+                print(cell)
             else:
                 current_map = self.get_current_map_with_pieces(BoardCellType.ALL_CELL)
 
@@ -659,6 +651,8 @@ class BaseBoardPage(BasePage):
             self.selected_piece = None
             if not skip_next_team_change:
                 self.change_step_side()
+
+       
 
     def exit_event(self):
         pass
