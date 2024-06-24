@@ -23,6 +23,7 @@ class BaseTheme:
         self.loser_glow = self.config.RED_TRANSPARENT
         self.loser_notification_text = self.config.WHITE
         self.loser_notification_background = self.config.DARK_RED
+        self.guide_glow = self.config.BLUE_TRANSPARENT
         self.button_text = self.config.BLACK
         self.button_background = self.config.WHITE
         self.scoreboard_cells = self.config.LIGHT_GRAY
