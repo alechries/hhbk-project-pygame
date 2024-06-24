@@ -52,7 +52,7 @@ class MenuPage(BasePage):
                                         background=self.thema.background)
         self.log_out_button = Button(self.SCREEN.get_width() - self.difficulty_button_width - self.buttons_margin,
                                      self.buttons_margin, self.difficulty_button_width, self.button_height, "Logout",
-                                     self.thema.text, background=self.thema.background)
+                                     self.thema.text, background=self.thema.close_button)
 
         self.buttons: typing.List[Button] = [
             self.chess_game_button, self.checkers_game_button, self.difficulty_easy_button,
