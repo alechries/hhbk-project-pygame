@@ -17,9 +17,9 @@ class CheckersBoardPage(BaseBoardPage):
         self.guide_message = [
             'Die Figuren (Spieler = Weiß, Computer = Schwarz)',
             'können nur diagonal bewegt werden. Falls das hintere diagonale Feld',
-            'Die eigene Figur hat zwei verschiedene Züge.',
             'von der gegnerischen Figur frei ist, dann kann man diese überspringen',
             'und die Figur aus dem Spiel nehmen. ',
+            'Die eigene Figur hat zwei verschiedene Züge.',
             'Ziel des Spiels ist es, alle gegnerischen Figuren zu schlagen',
             'oder die eigene Figur auf die gegnerische Grundlinie zu platzieren.',
         ]

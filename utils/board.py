@@ -82,7 +82,7 @@ class BaseBoardPage(BasePage):
         button_x = self.SCREEN.get_width() // 2 - button_width // 2
         button_y = self.SCREEN.get_height() // 2.5
 
-        self.menu_button = Button(button_x, button_y, button_width, button_height, "Menu",
+        self.menu_button = Button(button_x, button_y, button_width, button_height, "Menü",
                                   self.thema.button_text, background=self.thema.button_background, )
         button_y += button_height + buttons_margin
         self.repeat_button = Button(button_x, button_y, button_width, button_height, "Spiel wiederholen",
