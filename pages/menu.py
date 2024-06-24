@@ -14,7 +14,7 @@ class MenuPage(BasePage):
     def __init__(self):
         super().__init__()
 
-        self.button_width = 300
+        self.button_width = 400
         self.button_height = 50
         self.buttons_margin = 10
         self.buttons_x_margin = 3
