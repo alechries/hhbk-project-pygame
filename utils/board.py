@@ -2,6 +2,7 @@ import typing
 
 import pygame
 
+from models.user import UserModel
 from utils.cell import Cell
 from utils.page import BasePage
 from utils.button import Button
@@ -28,6 +29,7 @@ class BaseBoardPage(BasePage):
         self.__selected_piece = None
         self.__current_moves = []
         self.won = False
+        self.current_difficulty_level = LevelType(self.config.game_difficulty_level)
 
         self.num_blocks_horizontal = 6
         self.num_blocks_vertical = self.num_blocks_horizontal
@@ -45,6 +47,8 @@ class BaseBoardPage(BasePage):
 
         self.board_x = (self.SCREEN.get_width() - (self.num_blocks_horizontal * self.block_size)) // 2
         self.board_y = (self.SCREEN.get_height() - (self.num_blocks_vertical * self.block_size)) // 2
+        self.board_width = self.num_blocks_horizontal * self.block_size + self.block_border_width
+        self.board_height = self.num_blocks_vertical * self.block_size + self.block_border_width
 
         self.board_indent = self.SCREEN.get_width() // 100 * 5
         self.storage_left_x = self.board_x - self.board_indent - self.block_size
@@ -81,16 +85,84 @@ class BaseBoardPage(BasePage):
 
         button_y += button_height + buttons_margin
         self.toptable_button = Button(button_x, button_y, button_width, button_height, "Rating-Tabelle",
-                                    self.thema.button_text, background=self.thema.button_background, )
+                                      self.thema.button_text, background=self.thema.button_background, )
 
-        self.drawing_button_list = (
+        self.end_button_list = (
             self.menu_button,
             self.repeat_button,
             self.toptable_button
         )
 
+        button_width = 150
+        button_height = 30
+        button_margin = 20
+
+        button_x = self.board_x
+        button_y = self.board_y - button_height - button_margin
+
+        self.back_button = Button(button_x, button_y, button_width, button_height, "Menu",
+                                  self.thema.button_text, background=self.thema.button_background, )
+
+        button_x = self.board_x + self.board_width - button_width
+        self.help_button = Button(button_x, button_y, button_width, button_height, "Hilfe",
+                                  self.thema.button_text, background=self.thema.button_background, )
+
+        self.main_button_list = (
+            self.back_button,
+            self.help_button,
+        )
+
     def change_step_side(self):
         if self.won or self.check_winner():
+            if not self.won and self.current_user is not None:
+                user: UserModel = self.current_user
+
+                if self.current_step == TeamType.WHITE_TEAM:
+
+                    if self.current_difficulty_level == LevelType.EASY:
+
+                        if self.game_type == GameType.CHECKERS_GAME:
+                            user.increment_checkers_wins_easy()
+                        elif self.game_type == GameType.CHESS_GAME:
+                            user.increment_chess_wins_easy()
+
+                    elif self.current_difficulty_level == LevelType.MEDIUM:
+
+                        if self.game_type == GameType.CHECKERS_GAME:
+                            user.increment_checkers_wins_medium()
+                        elif self.game_type == GameType.CHESS_GAME:
+                            user.increment_chess_wins_medium()
+
+                    elif self.current_difficulty_level == LevelType.HARD:
+
+                        if self.game_type == GameType.CHECKERS_GAME:
+                            user.increment_checkers_wins_hard()
+                        elif self.game_type == GameType.CHESS_GAME:
+                            user.increment_chess_wins_hard()
+
+                elif self.current_step == TeamType.BLACK_TEAM:
+
+                    if self.current_difficulty_level == LevelType.EASY:
+
+                        if self.game_type == GameType.CHESS_GAME:
+                            user.increment_chess_wins_easy()
+                        elif self.game_type == GameType.CHESS_GAME:
+                            user.increment_chess_wins_easy()
+
+                    elif self.current_difficulty_level == LevelType.MEDIUM:
+
+                        if self.game_type == GameType.CHESS_GAME:
+                            user.increment_chess_wins_medium()
+                        elif self.game_type == GameType.CHESS_GAME:
+                            user.increment_chess_wins_medium()
+
+                    elif self.current_difficulty_level == LevelType.HARD:
+
+                        if self.game_type == GameType.CHESS_GAME:
+                            user.increment_chess_wins_hard()
+                        elif self.game_type == GameType.CHESS_GAME:
+                            user.increment_chess_wins_hard()
+                    
             self.won = True
 
         elif self.current_step == TeamType.WHITE_TEAM:
@@ -106,8 +178,7 @@ class BaseBoardPage(BasePage):
         outer_rect = [
             self.board_x - self.block_border_width // 2,
             self.board_y - self.block_border_width // 2,
-            self.num_blocks_horizontal * self.block_size + self.block_border_width,
-            self.num_blocks_vertical * self.block_size + self.block_border_width
+            self.board_width, self.board_height
         ]
         pygame.draw.rect(self.SCREEN, self.thema.background, outer_rect, border_radius=5)
 
@@ -190,6 +261,32 @@ class BaseBoardPage(BasePage):
                 self.block_size, self.block_size
             ], 3, border_radius=5)
 
+        # INFO
+
+        pygame.draw.rect(self.SCREEN, self.thema.background,
+                         [self.board_x, self.board_y + self.board_height + 20, self.board_width, 40
+                          ], border_radius=2)
+
+        game_name = 'UNKNOWN'
+        level_name = 'UNKNOWN'
+
+        if self.game_type == GameType.CHECKERS_GAME:
+            game_name = 'CHECKERS'
+        elif self.game_type == GameType.CHESS_GAME:
+            game_name = 'CHESS'
+
+        if self.current_difficulty_level == LevelType.EASY:
+            level_name = 'EASY LEVEL'
+        elif self.current_difficulty_level == LevelType.MEDIUM:
+            level_name = 'MEDIUM LEVEL'
+        elif self.current_difficulty_level == LevelType.HARD:
+            level_name = 'HARD LEVEL'
+
+        text = self.MEDIUM_FONT.render(f'{game_name} - {level_name}', True, self.thema.notification_text)
+        text_rect = text.get_rect(center=((self.board_x + self.board_width // 2), self.board_y + self.board_height + 40))
+        self.SCREEN.blit(text, text_rect)
+
+
         # WINNER OR LOSER
 
         if self.won:
@@ -206,7 +303,12 @@ class BaseBoardPage(BasePage):
                 text_rect = text.get_rect(center=(self.SCREEN.get_width() // 2, self.SCREEN.get_height() // 3))
                 self.SCREEN.blit(text, text_rect)
 
-            for button in self.drawing_button_list:
+            for button in self.end_button_list:
+                button.draw(self.SCREEN)
+
+        else:
+
+            for button in self.main_button_list:
                 button.draw(self.SCREEN)
 
     def minimax(self, current_map: typing.List[typing.List], main_team: TeamType, current_team: TeamType,
@@ -297,6 +399,10 @@ class BaseBoardPage(BasePage):
             self.make_enemy_move()
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
+
+            if self.back_button.is_clicked(event):
+                self.restart_game()
+                self.set_as_current_page_by_page_name('menu')
 
             if self.current_step == TeamType.WHITE_TEAM:
                 for i, piece in enumerate(self.pieces_by_current_teams_step):
@@ -408,12 +514,12 @@ class BaseBoardPage(BasePage):
                         move_row, move_column, self.board_x, self.board_y, self.block_size, self.block_size,
                     ))
         return moves
-    
+
     def get_moves(self, piece_column: int, piece_row: int, team_type: TeamType,
-                     current_map: typing.List[typing.List[Piece or None]], only_with_destroyed_pieces=False) -> \
+                  current_map: typing.List[typing.List[Piece or None]], only_with_destroyed_pieces=False) -> \
             typing.List[Cell]:
         return []
-    
+
     @property
     def current_step_direction(self):
         direction_team = -1 if self.current_step == TeamType.WHITE_TEAM else 1
@@ -441,6 +547,7 @@ class BaseBoardPage(BasePage):
 
         self.__selected_piece = None
         self.__current_moves = []
+        self.current_difficulty_level = self.config.game_difficulty_level
 
         self.white_team_pieces = self.generate_pieces(TeamType.WHITE_TEAM, SpawnType.BOTTOM_SPAWN)
         self.white_team_pieces_storage: typing.List[Piece] = []
